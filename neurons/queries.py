@@ -33,6 +33,7 @@ class QueryProvider(Enum):
     EPCTEX_REDDIT_SCRAPER = "epctex_reddit_scraper"
     PERCIPIO_REDDIT_LOOKUP = "percipio_reddit_lookup"
     MICROWORLDS_TWITTER_SCRAPER = "microworlds_twitter_scraper"
+    TWITTER_SCRAPERV2 = "apidojo_tweet_scraper"
 
 
 # Mapping between query types and their respective classes
