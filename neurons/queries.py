@@ -12,7 +12,7 @@ from neurons.apify.reddit.epctex_reddit_scraper import EpctexRedditScraper
 from neurons.services.percipio_reddit_lookup import PercipioRedditLookup
 from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 
 class QueryType(Enum):
     """
