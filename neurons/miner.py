@@ -235,7 +235,9 @@ def main( config ):
             bt.logging.info(f"picking random keyword: {search_key} \n")
 
         tweets = twitter_query.execute(search_key, 15, synapse.dendrite.hotkey, validator_version_str, my_subnet_uid)
-
+        if (len(tweets) == 0):
+            tweets = twitter_query.execute(search_key, 15, synapse.dendrite.hotkey, validator_version_str, my_subnet_uid)
+            
         # Save the tweets associated with that search key
         #print(type(tweets))
         #previous_results_twitter[search_key] = tweets
