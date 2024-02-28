@@ -26,7 +26,6 @@ class QueryProvider(Enum):
     """
     Enum representing the different providers of queries.
     """
-    TWITTER_SCRAPER = "apidojo_tweet_scraper"
     TWEET_SCRAPER = "apidojo_tweet_scraper"
     TWEET_FLASH = "apify_tweet_flash"
     WEB_HARVESTER_TWITTER_SCRAPER = "web_harvester_twitter_scraper"
@@ -68,7 +67,10 @@ def get_query(query_type: QueryType, query_provider: QueryProvider):
     """
 
     # Get the query class from the mapping
+    print(query_type)
+    print(TWEET_SCRAPER)
     query_class = QUERY_MAP.get((query_type, query_provider))
+    print(query_class)
 
     if query_class:
         return query_class()
