@@ -41,8 +41,8 @@ class ActorConfig:
         # self.api_key = os.environ.get('APIFY_API_KEY')  # Get the Apify API key from environment variable
         self.api_key = os.getenv("APIFY_API_KEY")
         self.actor_id = actor_id  # Actor ID
-        self.timeout_secs = 30
-        self.memory_mbytes = None 
+        self.timeout_secs = 45
+        self.memory_mbytes = 1024 
 
 
 def run_actor(actor_config: ActorConfig, run_input: dict, default_dataset_id: str = "defaultDatasetId"):
