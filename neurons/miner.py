@@ -87,7 +87,7 @@ def main( config ):
     This function takes the configuration and starts the miner.
     It sets up the necessary Bittensor objects, attaches the necessary functions to the axon, and starts the main loop.
     """
-    twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWEET_FLASH)
+    twitter_query = get_query(QueryType.TWITTER, QueryProvider.MICROWORLDS_TWITTER_SCRAPER)
     reddit_query = get_query(QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER_LITE)
     # Activating Bittensor's logging with the set configurations.
     bt.logging(config=config, logging_dir=config.full_path)
@@ -95,6 +95,9 @@ def main( config ):
 
     # This logs the active configuration to the specified logging directory for review.
     bt.logging.info(config)
+
+    # A collection that will store previous results
+    previous_results_twitter = {}
 
     # Initialize Bittensor miner objects
     # These classes are vital to interact and function within the Bittensor network.
@@ -227,6 +230,10 @@ def main( config ):
             bt.logging.info(f"picking random keyword: {search_key} \n")
 
         tweets = twitter_query.execute(search_key, 15, synapse.dendrite.hotkey, validator_version_str, my_subnet_uid)
+
+        # Save the tweets associated with that search key
+        previous_results_twitter[search_key] = tweets
+        
         synapse.version = scraping.utils.get_my_version()        
         synapse.scrap_output = tweets
         bt.logging.info(f"✅ success: returning {len(synapse.scrap_output)} tweets\n")
@@ -276,8 +283,8 @@ def main( config ):
     bt.logging.info(f"Attaching forward function to axon.")
     axon.attach(forward_fn = redditScrap).attach(
         forward_fn = twitterScrap,
-        # blacklist_fn = blacklist_twitter,
-        # priority_fn = priority_twitter,
+        blacklist_fn = blacklist_twitter,
+        priority_fn = priority_twitter,
     )
 
     # Serve passes the axon information to the network + netuid we are hosting on.
