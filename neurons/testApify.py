@@ -11,5 +11,5 @@ def random_line(a_file="keywords.txt"):
 
 twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2)
 search_key = [random_line()]
-tweets = twitter_query.execute(search_key, 15, synapse.dendrite.hotkey, validator_version_str, 3)
+tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
 print(type(tweets))
