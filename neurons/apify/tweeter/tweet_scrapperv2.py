@@ -18,32 +18,13 @@ class MicroworldsTwitterScraper:
         """
         Initialize the MicroworldsTwitterScraper.
         """
-        self.actor_config.memory_mbytes = 1024
-        self.actor_config.timeout_secs = 45
+
         self.actor_config = ActorConfig("61RPP7dywgiy0JPD0")
+        self.actor_config.memory_mbytes = 512
+        self.actor_config.timeout_secs = 45
 
 
 
-    async def searchSingleUrl(self, url: str, max_tweets: int):
-        run_input = {
-            "maxRequestRetries": 3,
-            "searchMode": "live",
-            "urls": [url],
-            "maxTweets": max_tweets
-        }
-        return await run_actor_async(self.actor_config, run_input)
-
-    async def distributedSearchByUrl(self, urls: list, max_tweets_per_url: int = 1):
-        return await asyncio.gather(*(self.searchSingleUrl(url, max_tweets=max_tweets_per_url) for url in urls))
-
-    def searchByUrl(self, urls: list, max_tweets_per_url: int = 1):
-        """
-        Search for tweets by url.
-        """
-        results = asyncio.run(self.distributedSearchByUrl(urls, max_tweets_per_url))
-        flattened_results = [item for sublist in results for item in sublist]
-        return self.map(flattened_results)
-        
     
     def execute(self, search_queries: list = ["bittensor"], limit_number: int = 15, validator_key: str = "None", validator_version: str = None, miner_uid: int = 0) -> list:
         """
@@ -55,14 +36,24 @@ class MicroworldsTwitterScraper:
         Returns:
             list: A list of tweets.
         """
-        run_input = {
-            "maxRequestRetries": 3,
-            "searchMode": "live",
-            "scrapeTweetReplies": True,
-            "searchTerms": search_queries,
-            "maxTweets": limit_number
-        }
 
+        run_input = {
+          "maxRequestRetries": 3,
+          "searchMode": "live",
+          "maxItems": 50,
+          "minimumFavorites": 0,
+          "minimumReplies": 1,
+          "minimumRetweets": 1,
+          "onlyImage": false,
+          "onlyQuote": false,
+          "onlyTwitterBlue": false,
+          "onlyVerifiedUsers": true,
+          "onlyVideo": false,
+          "searchTerms": search_queries,
+          "sort": "Latest",
+          "tweetLanguage": "en"
+        }
+        
         return self.map(run_actor(self.actor_config, run_input))
     
     def format_date(self, date: datetime):
