@@ -380,9 +380,9 @@ def main( config ):
 if __name__ == "__main__":
     try:
         #main( get_config() )
-        twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWEET_SCRAPER)
+        twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2 )
         search_key = [random_line()]
-        print(QueryProvider.TWEET_SCRAPER)
+        print(QueryProvider.TWITTER_SCRAPERV2)
         print(search_key)
         print(twitter_query)
         #tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
