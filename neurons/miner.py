@@ -386,5 +386,6 @@ if __name__ == "__main__":
         print(type(tweets))
         print(tweets)
     except Exception as e:
+        traceback.print_exc()
         bt.logging.error(f"Failed to start the miner due to: {str(e)}")
         sys.exit(1)
