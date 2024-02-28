@@ -66,7 +66,7 @@ class TwitterScraperV2:
 
         images = []
 
-        extended_entities = item.get("extended_entities")
+        extended_entities = item.get("extendedEntities")
         if extended_entities:
             media_urls = {m["media_key"]: m["media_url_https"] for m in extended_entities["media"] if m.get("media_url_https")}
 
