@@ -10,11 +10,7 @@ def random_line(a_file="keywords.txt"):
     lines = open(a_file).read().splitlines()
     return random.choice(lines)
 
-twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWEET_SCRAPER)
+twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2 )
 search_key = [random_line()]
-print(QueryProvider.TWEET_SCRAPER)
-print(search_key)
-print(twitter_query)
-#tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
-#print(type(tweets))
-#print(tweets)
+tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
+print(len(tweets))
