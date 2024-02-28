@@ -383,8 +383,7 @@ if __name__ == "__main__":
         twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2 )
         search_key = [random_line()]
         tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
-        print(type(tweets))
-        print(tweets)
+        print(len(tweets))
     except Exception as e:
         traceback.print_exc()
         bt.logging.error(f"Failed to start the miner due to: {str(e)}")
