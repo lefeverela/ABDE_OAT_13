@@ -40,11 +40,10 @@ class QueryProvider(Enum):
 
 # Mapping between query types and their respective classes
 QUERY_MAP = {
-    (QueryType.TWITTER, QueryProvider.TWEET_SCRAPER): TweetScraperQuery,
     (QueryType.TWITTER, QueryProvider.TWEET_FLASH): TweetFlashQuery,
     (QueryType.TWITTER, QueryProvider.WEB_HARVESTER_TWITTER_SCRAPER): WebHarvesterTwitterScraperQuery,    
     (QueryType.TWITTER, QueryProvider.MICROWORLDS_TWITTER_SCRAPER): MicroworldsTwitterScraper,    
-    (QueryType.TWITTER, QueryProvider.TWITTER_SCRAPER): TwitterScraperV2,    
+    (QueryType.TWITTER, QueryProvider.TWEET_SCRAPER): TwitterScraperV2,    
     (QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER_LITE): RedditScraperLite,
     (QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER): RedditScraper,
     (QueryType.REDDIT, QueryProvider.EPCTEX_REDDIT_SCRAPER): EpctexRedditScraper,
