@@ -206,6 +206,8 @@ def main( config ):
         This function runs after the TwitterScrap synapse has been deserialized (i.e. after synapse.data is available).
         This function runs after the blacklist and priority functions have been called.
         """
+
+        print("I AM IN TWITTER SCRAP")
         validator_uid = metagraph.hotkeys.index( synapse.dendrite.hotkey )
 
         # Version checking
@@ -232,6 +234,7 @@ def main( config ):
         tweets = twitter_query.execute(search_key, 15, synapse.dendrite.hotkey, validator_version_str, my_subnet_uid)
 
         # Save the tweets associated with that search key
+        print(type(tweets))
         previous_results_twitter[search_key] = tweets
         
         synapse.version = scraping.utils.get_my_version()        
