@@ -77,15 +77,15 @@ class TwitterScraperV2:
 
 
         date_format = "%a %b %d %H:%M:%S %z %Y"
-        parsed_date = datetime.strptime(item["created_at"], date_format)
-
+        parsed_date = datetime.strptime(item["createdAt"], date_format)
+        print(hashtags)
         return {
-            'id': item['id_str'], 
+            'id': item['id'], 
             'url': item['url'], 
-            'text': item.get('truncated_full_text') or item['full_text'], 
-            'likes': item['favorite_count'], 
+            'text': item.get('text') or item['full_text'], 
+            'likes': item['likeCount'], 
             'images': images, 
-            'username': item['user']['screen_name'],
+            'username': item['author']['userName'],
             'hashtags': hashtags,
             'timestamp': self.format_date(parsed_date)
         } 
