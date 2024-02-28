@@ -62,7 +62,7 @@ setup(
     description='scraping_subnet',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/gitphantomman/scraping-subnet',
+    url='',
     author='gitphantomman', 
     packages=find_packages(),
     include_package_data=True,
