@@ -2,7 +2,7 @@ import os
 from enum import Enum
 from neurons.apify.actors import ActorConfig
 from neurons.apify.tweeter.tweet_flash_query import TweetFlashQuery
-from neurons.apify.tweeter.tweet_scraper_query import TweetScraperQuery
+#from neurons.apify.tweeter.tweet_scraper_query import TweetScraperQuery
 from neurons.apify.tweeter.web_harvester_twitter_scraper_query import WebHarvesterTwitterScraperQuery
 from neurons.apify.tweeter.microworlds_twitter_scraper import MicroworldsTwitterScraper
 from neurons.apify.tweeter.tweet_scrapperv2 import TwitterScraperV2
