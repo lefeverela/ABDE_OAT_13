@@ -100,7 +100,7 @@ def main( config ):
     bt.logging.info(config)
 
     # A collection that will store previous results
-    previous_results_twitter = {}
+    #previous_results_twitter = {}
 
     # Initialize Bittensor miner objects
     # These classes are vital to interact and function within the Bittensor network.
@@ -237,8 +237,8 @@ def main( config ):
         tweets = twitter_query.execute(search_key, 15, synapse.dendrite.hotkey, validator_version_str, my_subnet_uid)
 
         # Save the tweets associated with that search key
-        print(type(tweets))
-        previous_results_twitter[search_key] = tweets
+        #print(type(tweets))
+        #previous_results_twitter[search_key] = tweets
         
         synapse.version = scraping.utils.get_my_version()        
         synapse.scrap_output = tweets
