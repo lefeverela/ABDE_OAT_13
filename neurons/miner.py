@@ -379,11 +379,8 @@ def main( config ):
 # This is the main function, which runs the miner.
 if __name__ == "__main__":
     try:
-        #main( get_config() )
-        twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2 )
-        search_key = [random_line()]
-        tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
-        print(len(tweets))
+        main( get_config() )
+
     except Exception as e:
         traceback.print_exc()
         bt.logging.error(f"Failed to start the miner due to: {str(e)}")
