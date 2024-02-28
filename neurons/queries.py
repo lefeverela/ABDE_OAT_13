@@ -27,7 +27,7 @@ class QueryProvider(Enum):
     Enum representing the different providers of queries.
     """
     TWITTER_SCRAPER = "apidojo_tweet_scraper"
-    TWEET_SCRAPER = "apify_tweet_scraper"
+    TWEET_SCRAPER = "apidojo_tweet_scraper"
     TWEET_FLASH = "apify_tweet_flash"
     WEB_HARVESTER_TWITTER_SCRAPER = "web_harvester_twitter_scraper"
     REDDIT_SCRAPER_LITE = "apify_reddit_scraper_lite"
