@@ -1,5 +1,5 @@
 
-from neurons.queries import get_query, QueryType, QueryProvider
+from neurons.queries_custom import get_query, QueryType, QueryProvider
 import random
 import os
 
