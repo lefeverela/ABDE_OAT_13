@@ -26,6 +26,7 @@ class QueryProvider(Enum):
     """
     Enum representing the different providers of queries.
     """
+    TWITTER_SCRAPER = "apidojo_tweet_scraper"
     TWEET_SCRAPER = "apify_tweet_scraper"
     TWEET_FLASH = "apify_tweet_flash"
     WEB_HARVESTER_TWITTER_SCRAPER = "web_harvester_twitter_scraper"
@@ -34,7 +35,7 @@ class QueryProvider(Enum):
     EPCTEX_REDDIT_SCRAPER = "epctex_reddit_scraper"
     PERCIPIO_REDDIT_LOOKUP = "percipio_reddit_lookup"
     MICROWORLDS_TWITTER_SCRAPER = "microworlds_twitter_scraper"
-    TWITTER_SCRAPERV2 = "apidojo_tweet_scraper"
+    
 
 
 # Mapping between query types and their respective classes
@@ -43,7 +44,7 @@ QUERY_MAP = {
     (QueryType.TWITTER, QueryProvider.TWEET_FLASH): TweetFlashQuery,
     (QueryType.TWITTER, QueryProvider.WEB_HARVESTER_TWITTER_SCRAPER): WebHarvesterTwitterScraperQuery,    
     (QueryType.TWITTER, QueryProvider.MICROWORLDS_TWITTER_SCRAPER): MicroworldsTwitterScraper,    
-    (QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2): TwitterScraperV2,    
+    (QueryType.TWITTER, QueryProvider.TWITTER_SCRAPER): TwitterScraperV2,    
     (QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER_LITE): RedditScraperLite,
     (QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER): RedditScraper,
     (QueryType.REDDIT, QueryProvider.EPCTEX_REDDIT_SCRAPER): EpctexRedditScraper,
