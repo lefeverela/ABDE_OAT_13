@@ -23,6 +23,8 @@ class TwitterScraperV2:
         self.actor_config.memory_mbytes = 512
         self.actor_config.timeout_secs = 45
 
+        self.keywords_past = []
+
 
 
     
@@ -53,6 +55,9 @@ class TwitterScraperV2:
           "sort": "Latest",
           "tweetLanguage": "en"
         }
+
+        self.keywords_past.append(search_queries)
+        print(self.keywords_past)
         
         return self.map(run_actor(self.actor_config, run_input))
     
