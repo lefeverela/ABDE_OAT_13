@@ -18,9 +18,10 @@ class MicroworldsTwitterScraper:
         """
         Initialize the MicroworldsTwitterScraper.
         """
-        self.actor_config = ActorConfig("heLL6fUofdPgRXZie")
-        #self.actor_config.memory_mbytes = 256
-        #self.actor_config.timeout_secs = 30
+        self.actor_config.memory_mbytes = 1024
+        self.actor_config.timeout_secs = 45
+        self.actor_config = ActorConfig("61RPP7dywgiy0JPD0")
+
 
 
     async def searchSingleUrl(self, url: str, max_tweets: int):
