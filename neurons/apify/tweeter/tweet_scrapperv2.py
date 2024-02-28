@@ -6,7 +6,7 @@ import asyncio
 # Setting up logger for debugging and information purposes
 logger = logging.getLogger(__name__)
 
-class MicroworldsTwitterScraper:
+class TwitterScraperV2:
     """
     A class designed to query tweets based using the microworlds/twitter-scraper actor on the Apify platform.
 
