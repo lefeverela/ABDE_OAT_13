@@ -1,6 +1,7 @@
 
 from neurons.queries import get_query, QueryType, QueryProvider
 import random
+import os
 
 def random_line(a_file="keywords.txt"):
     if not os.path.exists(a_file):
@@ -13,3 +14,4 @@ twitter_query = get_query(QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2)
 search_key = [random_line()]
 tweets = twitter_query.execute(search_key, 15, "NOTIMPORTANT", None, 3)
 print(type(tweets))
+print(tweets)
