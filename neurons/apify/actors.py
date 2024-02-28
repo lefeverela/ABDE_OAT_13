@@ -70,8 +70,6 @@ def run_actor(actor_config: ActorConfig, run_input: dict, default_dataset_id: st
     # Fetch data items from the specified dataset
     data_set = [item for item in client.dataset(run[default_dataset_id]).iterate_items()]
 
-    print(data_set)
-
     logger.info(f"Fetched {len(data_set)} items from dataset")
     return data_set
 
