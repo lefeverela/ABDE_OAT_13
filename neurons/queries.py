@@ -26,7 +26,7 @@ class QueryProvider(Enum):
     """
     Enum representing the different providers of queries.
     """
-    TWEET_SCRAPER = "apidojo_tweet_scraper"
+    TWITTER_SCRAPERV2 = "apidojo_tweet_scraper"
     TWEET_FLASH = "apify_tweet_flash"
     WEB_HARVESTER_TWITTER_SCRAPER = "web_harvester_twitter_scraper"
     REDDIT_SCRAPER_LITE = "apify_reddit_scraper_lite"
@@ -42,7 +42,7 @@ QUERY_MAP = {
     (QueryType.TWITTER, QueryProvider.TWEET_FLASH): TweetFlashQuery,
     (QueryType.TWITTER, QueryProvider.WEB_HARVESTER_TWITTER_SCRAPER): WebHarvesterTwitterScraperQuery,    
     (QueryType.TWITTER, QueryProvider.MICROWORLDS_TWITTER_SCRAPER): MicroworldsTwitterScraper,    
-    (QueryType.TWITTER, QueryProvider.TWEET_SCRAPER): TwitterScraperV2,    
+    (QueryType.TWITTER, QueryProvider.TWITTER_SCRAPERV2): TwitterScraperV2,    
     (QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER_LITE): RedditScraperLite,
     (QueryType.REDDIT, QueryProvider.REDDIT_SCRAPER): RedditScraper,
     (QueryType.REDDIT, QueryProvider.EPCTEX_REDDIT_SCRAPER): EpctexRedditScraper,
@@ -67,11 +67,7 @@ def get_query(query_type: QueryType, query_provider: QueryProvider):
     """
 
     # Get the query class from the mapping
-    print(query_type)
-    print(TWEET_SCRAPER)
     query_class = QUERY_MAP.get((query_type, query_provider))
-    print(query_class)
-
     if query_class:
         return query_class()
     else:
