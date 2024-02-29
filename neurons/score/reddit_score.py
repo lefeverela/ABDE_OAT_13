@@ -22,11 +22,11 @@ DEALINGS IN THE SOFTWARE.
 import torch
 from datetime import datetime
 import bittensor as bt
-from neurons.queries import get_query, QueryType, QueryProvider
+#from neurons.queries import get_query, QueryType, QueryProvider
 import random
 from dateutil.parser import parse
 
-reddit_query = get_query(QueryType.REDDIT, QueryProvider.PERCIPIO_REDDIT_LOOKUP)
+#reddit_query = get_query(QueryType.REDDIT, QueryProvider.PERCIPIO_REDDIT_LOOKUP)
 
 def calculateScore(responses = [], tag = 'tao'):
     """
