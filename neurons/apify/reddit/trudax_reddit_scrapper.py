@@ -49,7 +49,7 @@ class TrudaxRedditScraper:
             "mode": "posts",
             "nsfw": False,
             "query": keywords,
-            "sort": "COMMENTS",
+            "sort": "RELEVANCE",
             "timing": "day",
             "types:gif": False,
             "types:image": False,
@@ -74,20 +74,26 @@ class TrudaxRedditScraper:
         Returns:
             list: The mapped or transformed data.
         """
-        print(input)
         original_format = '%Y-%m-%dT%H:%M:%S.%f%z'
         desired_format = '%Y-%m-%dT%H:%M:%S.%fZ'
-        filtered_input = [{
-            'id': item['id'], 
-            'url': item['url'], 
-            'text': item['content'], 
-            'likes': item['counter']['upvote'], 
-            'dataType': 'comment',  #item['dataType'], 
-            'community': item['subreddit']['name'],
-            'username': item['author']['name'],
-            'parent': item.get('parentId'),
-            'timestamp': datetime.strptime(item['created_at'], original_format).strftime(desired_format)
-        } for item in input]
+        filtered_input = []
+        for item in input:
+            try:
+                filtered_input.append({
+                    'id': item['id'], 
+                    'url': item['url'], 
+                    'text': item['content'], 
+                    'likes': item['counter']['upvote'], 
+                    'dataType': 'comment',  #item['dataType'], 
+                    'community': item['subreddit']['name'],
+                    'username': item['author']['name'],
+                    'parent': item.get('parentId'),
+                    'timestamp': datetime.strptime(item['created_at'], original_format).strftime(desired_format)
+                })
+                
+            except:
+                pass
+        print(filtered_input)
         return filtered_input
 
 
