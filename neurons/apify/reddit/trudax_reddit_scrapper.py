@@ -85,9 +85,7 @@ class TrudaxRedditScraper:
             'dataType': 'comment',  #item['dataType'], 
             'community': item['subreddit']['name'],
             'username': item['author']['name'],
-            
             'parent': item.get('parentId'),
-            
             'timestamp': datetime.strptime(item['created_at'], original_format).strftime(desired_format)
         } for item in input]
         return filtered_input
