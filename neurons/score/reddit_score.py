@@ -103,7 +103,9 @@ def calculateScore(responses = [], tag = 'tao'):
     for i, response in enumerate(responses):
         if len(response) > 0:
             item_idx = random.randrange(len(response))
+            print(item_idx)
             spot_check_idx.append(item_idx)
+            print(response[item_idx])
             spot_check_id = response[item_idx].get('id')
             if spot_check_id is not None:
                 spot_check_ids.append(spot_check_id)
