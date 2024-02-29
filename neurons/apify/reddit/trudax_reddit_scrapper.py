@@ -17,38 +17,10 @@ class TrudaxRedditScraper:
         """
         Initialize the RedditScraperLite.
         """
-        self.actor_config = ActorConfig("oAuCIx3ItNrs2okjQ")
+        self.actor_config = ActorConfig("4YJmyaThjcRuUvQZg")
 
-    def searchByUrl(self, urls: list = ["https://twitter.com/elonmusk/status/1384874438472844800"]):
-        """
-        Search for reddit posts given a set of urls.
-        """
-        run_input = {
-            "debugMode": False,
-            "maxComments": 1,
-            "maxCommunitiesCount": 1,
-            "maxItems": 1,
-            "maxPostCount": 1,
-            "maxUserCount": 1,
-            "proxy": {
-                "useApifyProxy": True
-            },
-            "scrollTimeout": 40,
-            "searchComments": False,
-            "searchCommunities": False,
-            "searchPosts": True,
-            "searchUsers": False,
-            "searches": [
-                "t3_104vus0"
-            ],
-            "skipComments": False,
-            "startUrls": [
-                {
-                "url": urls[0]
-                }
-            ]
-            }
-        return self.map(run_actor(self.actor_config, run_input))
+
+    
     def execute(self, search_queries: list = ["bittensor"], limit_number: int = 15, validator_key: str = "None", validator_version: str = None, miner_uid: int = 0) -> list:
         """
         Execute the reddit post query process using the specified search queries.
@@ -61,21 +33,24 @@ class TrudaxRedditScraper:
         """
         run_input = {
             "debugMode": False,
-            "maxComments": 10,
-            "maxCommunitiesCount": 2,
-            "maxItems": 10,
-            "maxPostCount": 10,
-            "maxUserCount": 2,
             "proxy": {
                 "useApifyProxy": True
             },
-            "scrollTimeout": 40,
-            "searchComments": False,
-            "searchCommunities": False,
-            "searchPosts": True,
-            "searchUsers": False,
-            "searches": search_queries,
-            "skipComments": False
+            "dev_dataset_clear": False,
+            "dev_dataset_enable": False,
+            "dev_transform_enable": False,
+            "limit": 50,
+            "mode": "posts",
+            "nsfw": False,
+            "query": search_queries,
+            "sort": "COMMENTS",
+            "timing": "day",
+            "types:gif": False,
+            "types:image": False,
+            "types:link": False,
+            "types:poll": False,
+            "types:text": True,
+            "types:video": False
             }
 
         return self.map(run_actor(self.actor_config, run_input))
@@ -91,6 +66,8 @@ class TrudaxRedditScraper:
         Returns:
             list: The mapped or transformed data.
         """
+        print(item)
+        
         filtered_input = [{
             'id': item['id'], 
             'url': item['url'], 
@@ -107,7 +84,7 @@ class TrudaxRedditScraper:
 
 if __name__ == '__main__':
     # Initialize the RedditScraperLite query mechanism with the actor configuration
-    query = RedditScraperLite()
+    query = TrudaxRedditScraper()
 
     # Execute the search for the "bitcoin" search term
     data_set = query.execute(search_queries=["bitcoin"])
