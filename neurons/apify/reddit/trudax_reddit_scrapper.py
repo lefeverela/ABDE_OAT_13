@@ -92,6 +92,8 @@ class TrudaxRedditScraper:
                     'id': item['id'], 
                     'url': item['url'], 
                     'text': item['content'], 
+                    'title': item['title'], 
+                    'language': item['language'], 
                     'likes': item['counter']['upvote'], 
                     'dataType': 'comment',  #item['dataType'], 
                     'community': item['subreddit']['name'],
