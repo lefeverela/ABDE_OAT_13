@@ -59,6 +59,8 @@ class TrudaxRedditScraper:
             "types:video": False
             }
 
+        print(run_input)
+
         return self.map(run_actor(self.actor_config, run_input))
 
     def map(self, input: list) -> list:
