@@ -72,7 +72,7 @@ class TrudaxRedditScraper:
         Returns:
             list: The mapped or transformed data.
         """
-        print(item)
+        print(input)
         
         filtered_input = [{
             'id': item['id'], 
