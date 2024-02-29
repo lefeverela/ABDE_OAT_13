@@ -145,7 +145,7 @@ if __name__ == '__main__':
     # Execute the search for the "bitcoin" search term
     search_key = "bitcoin"
     data_set = query.execute(search_queries=[search_key])
-    scoring_metrics = neurons.score.reddit_score.calculateScore(responses = data_set, tag = search_key)
+    scoring_metrics = neurons.score.reddit_score.calculateScore(responses = data_set[0:5], tag = search_key)
     print(scoring_metrics)
 
     # Output the data
