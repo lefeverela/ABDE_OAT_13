@@ -87,7 +87,7 @@ class TrudaxRedditScraper:
             "types:video": False
             }
 
-        print(run_input)
+        #print(run_input)
 
         return self.map(run_actor(self.actor_config, run_input))
 
@@ -111,7 +111,7 @@ class TrudaxRedditScraper:
         filtered_input = []
         for item in input:
             try:
-                print(item['content'])
+                #print(item['content'])
                 original_string = item['created_at']
                 datetime_obj = datetime.strptime(original_string, '%Y-%m-%dT%H:%M:%S.%f%z')
                 formatted_date = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S')
