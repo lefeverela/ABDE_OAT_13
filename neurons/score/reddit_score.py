@@ -74,6 +74,7 @@ def calculateScore(responses = [], tag = 'tao'):
         id_list = []
         for post in response:  
             try:
+                print(post)
                 # Check that 'text', 'timestamp' and 'dataType' fields exist
                 post['text'] and post['timestamp'] and post['dataType']
 
