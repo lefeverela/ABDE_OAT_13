@@ -147,6 +147,4 @@ if __name__ == '__main__':
     scoring_metrics = neurons.score.reddit_score.calculateScore(responses = [data_set[0:5]], tag = search_key)
     print(scoring_metrics)
 
-    # Output the data
-    for item in data_set:
-        print(item)
+    
