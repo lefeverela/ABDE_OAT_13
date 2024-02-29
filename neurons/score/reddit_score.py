@@ -40,6 +40,8 @@ def calculateScore(responses = [], tag = 'tao'):
     """
     if len(responses) == 0:
         return []
+    print("REPOSNO")
+    print(responses)
     
     # Initialize variables
     # Initialize score list. The length of score list is the same as the length of responses.
@@ -66,6 +68,9 @@ def calculateScore(responses = [], tag = 'tao'):
     # Count the number of occurrences of each ID
     id_counts = {}
     for i, response in enumerate(responses):
+
+        print("START ENU")
+        print(response)
 
         if response == None:
             responses[i] = []
