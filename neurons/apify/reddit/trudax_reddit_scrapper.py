@@ -132,7 +132,6 @@ class TrudaxRedditScraper:
                 })
                 
             except:
-                traceback.print_exc()
                 pass
         #print(filtered_input)
         return filtered_input
