@@ -35,13 +35,10 @@ class TrudaxRedditScraper:
 
         keywords = ""
         for keyword in search_queries:
-            keywords += keyword + " "
+            keywords += keyword
         
         run_input = {
             "debugMode": False,
-            "proxy": {
-                "useApifyProxy": True
-            },
             "dev_dataset_clear": False,
             "dev_dataset_enable": False,
             "dev_transform_enable": False,
