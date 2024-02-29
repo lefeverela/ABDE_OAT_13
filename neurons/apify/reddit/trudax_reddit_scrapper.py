@@ -31,6 +31,11 @@ class TrudaxRedditScraper:
         Returns:
             list: A list of reddit posts.
         """
+
+        keywords = ""
+        for keyword in search_queries:
+            keywords += keyword + " "
+        
         run_input = {
             "debugMode": False,
             "proxy": {
@@ -42,7 +47,7 @@ class TrudaxRedditScraper:
             "limit": 50,
             "mode": "posts",
             "nsfw": False,
-            "query": search_queries,
+            "query": keywords,
             "sort": "COMMENTS",
             "timing": "day",
             "types:gif": False,
