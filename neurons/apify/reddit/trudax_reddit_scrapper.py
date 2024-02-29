@@ -2,7 +2,7 @@ from datetime import datetime
 import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
-from neurons.score.reddit_score.py
+import neurons.score.reddit_score 
 
 from io import StringIO
 from html.parser import HTMLParser
@@ -141,7 +141,10 @@ if __name__ == '__main__':
     query = TrudaxRedditScraper()
 
     # Execute the search for the "bitcoin" search term
-    data_set = query.execute(search_queries=["bitcoin"])
+    search_key = "bitcoin"
+    data_set = query.execute(search_queries=[search_key])
+    scoring_metrics = score.reddit_score.calculateScore(responses = data_set, tag = search_key)
+    print(scoring_metrics)
 
     # Output the data
     for item in data_set:
