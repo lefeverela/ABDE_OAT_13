@@ -76,13 +76,17 @@ class TrudaxRedditScraper:
         filtered_input = [{
             'id': item['id'], 
             'url': item['url'], 
-            'text': item['body'], 
-            'likes': item['upVotes'], 
+            'text': item['content'], 
+            'likes': item['counter']['upvote'], 
+            
             'dataType': item['dataType'], 
-            'community': item['communityName'],
-            'username': item['username'],
+            
+            'community': item['subreddit']['name'],
+            'username': item['author']['name'],
+            
             'parent': item.get('parentId'),
-            'timestamp': item['createdAt']
+            
+            'timestamp': item['created_at']
         } for item in input]
         return filtered_input
 
