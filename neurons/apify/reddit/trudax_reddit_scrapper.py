@@ -78,9 +78,7 @@ class TrudaxRedditScraper:
             'url': item['url'], 
             'text': item['content'], 
             'likes': item['counter']['upvote'], 
-            
-            'dataType': item['dataType'], 
-            
+            'dataType': 'comment',  #item['dataType'], 
             'community': item['subreddit']['name'],
             'username': item['author']['name'],
             
