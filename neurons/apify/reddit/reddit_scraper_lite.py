@@ -1,6 +1,6 @@
 import logging
 from neurons.apify.actors import run_actor, ActorConfig
-import neurons.score.reddit_score 
+#import neurons.score.reddit_score 
 
 # Setting up logger for debugging and information purposes
 logger = logging.getLogger(__name__)
