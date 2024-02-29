@@ -120,7 +120,7 @@ class TrudaxRedditScraper:
                 filtered_input.append({
                     'id': item['id'], 
                     'url': item['url'], 
-                    'text': self.remove_tags(item['content']), 
+                    'text': item['content']['markdown], 
                     'title': item['title'], 
                     'language': item['language'], 
                     'likes': item['counter']['upvote'], 
