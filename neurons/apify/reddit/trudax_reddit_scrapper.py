@@ -3,7 +3,7 @@ import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
 import neurons.score.reddit_score 
-import xml
+import xml.etree.ElementTree
 
 from io import StringIO
 from html.parser import HTMLParser
