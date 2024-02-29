@@ -102,6 +102,8 @@ class EpctexRedditScraper:
         Returns:
             list: The mapped or transformed data.
         """
+        print(input)
+        
         filtered_input = [
             {'id': item['id'], 
              'url': item['url'],
