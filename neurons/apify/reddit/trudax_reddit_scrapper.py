@@ -5,7 +5,7 @@ from neurons.apify.actors import run_actor, ActorConfig
 # Setting up logger for debugging and information purposes
 logger = logging.getLogger(__name__)
 
-class RedditScraperLite:
+class TrudaxRedditScraper:
     """
     A class designed to scrap reddit posts based on specific search queries using the Apify platform.
 
