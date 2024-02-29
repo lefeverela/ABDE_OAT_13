@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
+from neurons.score.reddit_score.py
 
 from io import StringIO
 from html.parser import HTMLParser
@@ -44,6 +45,9 @@ class TrudaxRedditScraper:
         s = MLStripper()
         s.feed(html)
         return s.get_data()
+
+    def remove_tags(self, text):
+        return(''.join(xml.etree.ElementTree.fromstring(text).itertext()))
     
     def execute(self, search_queries: list = ["bittensor"], limit_number: int = 15, validator_key: str = "None", validator_version: str = None, miner_uid: int = 0) -> list:
         """
