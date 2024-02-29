@@ -18,7 +18,8 @@ class TrudaxRedditScraper:
         Initialize the RedditScraperLite.
         """
         self.actor_config = ActorConfig("4YJmyaThjcRuUvQZg")
-
+        self.timeout_secs = 45
+        self.memory_mbytes = 4096 
 
     
     def execute(self, search_queries: list = ["bittensor"], limit_number: int = 15, validator_key: str = "None", validator_version: str = None, miner_uid: int = 0) -> list:
