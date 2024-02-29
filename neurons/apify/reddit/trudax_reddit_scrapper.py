@@ -76,9 +76,18 @@ class TrudaxRedditScraper:
         """
         original_format = '%Y-%m-%dT%H:%M:%S.%f%z'
         desired_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+
+
+
+        
         filtered_input = []
         for item in input:
             try:
+                original_string = item['created_at']
+                datetime_obj = datetime.strptime(original_string, '%Y-%m-%dT%H:%M:%S.%f%z')
+                formatted_date = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S')
+                milliseconds = datetime_obj.strftime('%f')[:3]  
+                corrected_output_with_milliseconds = f"{formatted_date}.{milliseconds}Z"
                 filtered_input.append({
                     'id': item['id'], 
                     'url': item['url'], 
@@ -87,8 +96,8 @@ class TrudaxRedditScraper:
                     'dataType': 'comment',  #item['dataType'], 
                     'community': item['subreddit']['name'],
                     'username': item['author']['name'],
-                    'parent': item.get('parentId'),
-                    'timestamp': datetime.strptime(item['created_at'], original_format).strftime(desired_format)
+                    'parent':item['id'], 
+                    'timestamp': corrected_output_with_milliseconds
                 })
                 
             except:
