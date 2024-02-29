@@ -40,7 +40,7 @@ class TrudaxRedditScraper:
         self.timeout_secs = 45
         self.memory_mbytes = 4096 
         
-    def strip_tags(html):
+    def strip_tags(self, html):
         s = MLStripper()
         s.feed(html)
         return s.get_data()
