@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import traceback
 from neurons.apify.actors import run_actor, ActorConfig
 
 from io import StringIO
