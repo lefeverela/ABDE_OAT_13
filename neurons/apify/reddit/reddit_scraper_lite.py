@@ -109,9 +109,14 @@ if __name__ == '__main__':
     # Initialize the RedditScraperLite query mechanism with the actor configuration
     query = RedditScraperLite()
 
-    # Execute the search for the "bitcoin" search term
-    data_set = query.execute(search_queries=["bitcoin"])
 
+    # Execute the search for the "bitcoin" search term
+    search_key = "bitcoin"
+    data_set = query.execute(search_queries=[search_key])
+    scoring_metrics = neurons.score.reddit_score.calculateScore(responses = data_set, tag = search_key)
+    print(scoring_metrics)
+
+    
     # Output the data
     for item in data_set:
         print(item)
