@@ -111,6 +111,7 @@ class TrudaxRedditScraper:
         filtered_input = []
         for item in input:
             try:
+                print(item['content'])
                 original_string = item['created_at']
                 datetime_obj = datetime.strptime(original_string, '%Y-%m-%dT%H:%M:%S.%f%z')
                 formatted_date = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S')
