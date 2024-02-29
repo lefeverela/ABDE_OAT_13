@@ -2,6 +2,24 @@ from datetime import datetime
 import logging
 from neurons.apify.actors import run_actor, ActorConfig
 
+from io import StringIO
+from html.parser import HTMLParser
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.reset()
+        self.strict = False
+        self.convert_charrefs= True
+        self.text = StringIO()
+    def handle_data(self, d):
+        self.text.write(d)
+    def get_data(self):
+        return self.text.getvalue()
+
+
+
+
 # Setting up logger for debugging and information purposes
 logger = logging.getLogger(__name__)
 
@@ -20,7 +38,11 @@ class TrudaxRedditScraper:
         self.actor_config = ActorConfig("4YJmyaThjcRuUvQZg")
         self.timeout_secs = 45
         self.memory_mbytes = 4096 
-
+        
+    def strip_tags(html):
+        s = MLStripper()
+        s.feed(html)
+        return s.get_data()
     
     def execute(self, search_queries: list = ["bittensor"], limit_number: int = 15, validator_key: str = "None", validator_version: str = None, miner_uid: int = 0) -> list:
         """
@@ -91,7 +113,7 @@ class TrudaxRedditScraper:
                 filtered_input.append({
                     'id': item['id'], 
                     'url': item['url'], 
-                    'text': item['content'], 
+                    'text': self.strip_tags(item['content']), 
                     'title': item['title'], 
                     'language': item['language'], 
                     'likes': item['counter']['upvote'], 
