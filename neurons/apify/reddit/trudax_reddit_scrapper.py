@@ -36,6 +36,9 @@ class TrudaxRedditScraper:
         keywords = ""
         for keyword in search_queries:
             keywords += keyword
+
+
+
         
         run_input = {
             "debugMode": False,
@@ -72,7 +75,8 @@ class TrudaxRedditScraper:
             list: The mapped or transformed data.
         """
         print(input)
-        
+        original_format = '%Y-%m-%dT%H:%M:%S.%f%z'
+        desired_format = '%Y-%m-%dT%H:%M:%S.%fZ'
         filtered_input = [{
             'id': item['id'], 
             'url': item['url'], 
@@ -84,7 +88,7 @@ class TrudaxRedditScraper:
             
             'parent': item.get('parentId'),
             
-            'timestamp': item['created_at']
+            'timestamp': datetime.strptime(item['created_at'], original_format).strftime(desired_format)
         } for item in input]
         return filtered_input
 
