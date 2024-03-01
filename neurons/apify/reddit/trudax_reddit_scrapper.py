@@ -161,14 +161,14 @@ class TrudaxRedditScraper:
         # Get the first ids
         list_of_ids = []
         if (len(starting_list) > 0):
-            if (keyword in message['text']):
+            if (first_search in message['text']):
                 list_of_ids = [result['id'] for result in starting_list]
 
         # Then add until we have the quotas
         if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
             for result in results: 
                 for message in results[result]:
-                    if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (keyword in message['text'])):
+                    if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (first_search in message['text'])):
                         starting_list.append(message)
                         list_of_ids.append(message['id'])
 
