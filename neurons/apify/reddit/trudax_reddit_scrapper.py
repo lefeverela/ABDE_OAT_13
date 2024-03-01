@@ -40,7 +40,7 @@ class TrudaxRedditScraper:
         """
         self.actor_config = ActorConfig("4YJmyaThjcRuUvQZg")
         self.timeout_secs = 45
-        self.memory_mbytes = 4096 
+        self.memory_mbytes = 8192 
         
     def strip_tags(self, html):
         s = MLStripper()
@@ -105,16 +105,16 @@ class TrudaxRedditScraper:
                     new_results.append(result)
                     list_of_ids.append(result['id'])
 
+            # THEN RELEVANCE
             if (len(list_of_ids) < min_post):
-    
-                # THEN RELEVANCE
                 run_input["sort"] = "RELEVANCE"
-                run_input["limit"] = 10
+                run_input["limit"] = max_post - len(list_of_ids)
                 top_results = self.map(run_actor(self.actor_config, run_input))
                 for result in top_results:
                     if (result['id'] not in list_of_ids):
                         new_results.append(result)
                         list_of_ids.append(result['id'])
+                        
         return (new_results)
 
     def map(self, input: list) -> list:
