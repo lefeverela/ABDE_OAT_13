@@ -110,7 +110,7 @@ class TwitterScraperV2:
         for item in input:
             if (self.searchterm in item['text']):
                 filtered_input.append(self.map_item(item))
-        print("NUMBER OF VALID TWEETS " + str(len(filtered_input)) 
+        print("NUMBER OF VALID TWEETS " + str(len(filtered_input))) 
         return filtered_input
 
 
