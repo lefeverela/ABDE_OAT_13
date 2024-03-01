@@ -77,7 +77,7 @@ class TrudaxRedditScraper:
             "mode": "posts",
             "nsfw": False,
             "query": keywords,
-            "sort": "RELEVANCE",
+            "sort": "NEW",
             "timing": "day",
             "types:gif": False,
             "types:image": False,
@@ -89,7 +89,13 @@ class TrudaxRedditScraper:
 
         #print(run_input)
 
-        return self.map(run_actor(self.actor_config, run_input))
+        new_results = self.map(run_actor(self.actor_config, run_input))
+        run_input["sort"] = "RELEVANCE"
+        top_results = self.map(run_actor(self.actor_config, run_input))
+        for result in top_results:
+            if (result['id'] not in new_results):
+                new_results.append(result)
+        return (new_results)
 
     def map(self, input: list) -> list:
         """
