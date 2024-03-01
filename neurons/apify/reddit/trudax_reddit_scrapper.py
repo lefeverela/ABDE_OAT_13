@@ -90,11 +90,14 @@ class TrudaxRedditScraper:
         #print(run_input)
 
         new_results = self.map(run_actor(self.actor_config, run_input))
+        list_of_ids = [result['id'] for result in new_results]
+        
         run_input["sort"] = "RELEVANCE"
         top_results = self.map(run_actor(self.actor_config, run_input))
         for result in top_results:
-            if (result['id'] not in new_results):
+            if (result['id'] not in list_of_ids):
                 new_results.append(result)
+                list_of_ids.append(result['id'])
         return (new_results)
 
     def map(self, input: list) -> list:
