@@ -56,6 +56,8 @@ class TwitterScraperV2:
           "tweetLanguage": "en"
         }
 
+        self.searchterm = search_queries[0]
+
         self.keywords_past.append(search_queries)
         print(self.keywords_past)
         
@@ -86,7 +88,7 @@ class TwitterScraperV2:
         return {
             'id': item['id'], 
             'url': item['url'], 
-            'text': item.get('text') or item['full_text'], 
+            'text': item.get('text') or item['text'], 
             'likes': item['likeCount'], 
             'images': images, 
             'username': item['author']['userName'],
@@ -104,7 +106,11 @@ class TwitterScraperV2:
         Returns:
             list: The mapped or transformed data.
         """
-        filtered_input = [self.map_item(item) for item in input]
+        filtered_input = []
+        for item in input:
+            if (self.searchterm in item['text']):
+                filtered_input.append(self.map_item(item))
+        print("NUMBER OF VALID TWEETS " + str(len(filtered_input)) 
         return filtered_input
 
 
