@@ -163,7 +163,7 @@ class TrudaxRedditScraper:
         if (len(starting_list) > 0):
             for result in starting_list:
                 if (first_search in result['text']):
-                    list_of_ids = result['id']
+                    list_of_ids.append(result['id'])
 
         # Then add until we have the quotas
         if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
