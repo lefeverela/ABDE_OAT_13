@@ -112,6 +112,7 @@ class TrudaxRedditScraper:
             return ()
 
         # Launch 3 request in parallel
+        print(datetime.now())
         results_queue = multiprocessing.Manager().Queue() 
         first_process = multiprocessing.Process(target=first_request, args=[run_input, results_queue])
         second_process = multiprocessing.Process(target=second_request, args=[run_input, results_queue])
@@ -129,6 +130,7 @@ class TrudaxRedditScraper:
                     message = results_queue.get()
                     results[message[0]] = message[1]
             time.sleep(1)
+        print(datetime.now())
 
         # Check results
         starting_point = ""
@@ -142,6 +144,8 @@ class TrudaxRedditScraper:
         elif ("RELEVANCE" in results):
             starting_point = "RELEVANCE"
             starting_list = results["RELEVANCE"]
+        print(starting_list)
+        print(starting_point)
 
         # Get the first ids
         list_of_ids = []
