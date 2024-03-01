@@ -67,7 +67,7 @@ class TrudaxRedditScraper:
         for keyword in search_queries:
             keywords += keyword
 
-
+        max_post_hour = 100
         max_post = 50
         min_post = 40
         
@@ -76,7 +76,7 @@ class TrudaxRedditScraper:
             "dev_dataset_clear": False,
             "dev_dataset_enable": False,
             "dev_transform_enable": False,
-            "limit": max_post,
+            "limit": max_post_hour,
             "mode": "posts",
             "nsfw": False,
             "query": keywords,
@@ -162,7 +162,7 @@ class TrudaxRedditScraper:
             list_of_ids = [result['id'] for result in starting_list]
 
         # Then add until we have the quotas
-        if (len(list_of_ids) < min_post) and (len(starting_list) > 0):
+        if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
             for result in results: 
                 for message in results[result]:
                     if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post)):
