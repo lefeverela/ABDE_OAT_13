@@ -93,15 +93,14 @@ class TrudaxRedditScraper:
         # HOUR REQUEST
         def first_request(run_input, results_queue):
             new_results = self.map(run_actor(self.actor_config, run_input))
-            print(new_results)
-            results_queue.put("FIRST", new_results)
+            results_queue.put(["FIRST", new_results])
             return ()
         
         # DAILY REQUEST
         def second_request(run_input, results_queue):
             run_input["timing"] = "day"
             new_results = self.map(run_actor(self.actor_config, run_input))
-            results_queue.put("SECOND", new_results)
+            results_queue.put(["SECOND", new_results])
             return ()
         
         # TOP REQUEST
@@ -109,7 +108,7 @@ class TrudaxRedditScraper:
             run_input["sort"] = "RELEVANCE"
             run_input["timing"] = "day"
             new_results = self.map(run_actor(self.actor_config, run_input))
-            results_queue.put("THIRD", new_results)
+            results_queue.put(["THIRD", new_results])
             return ()
 
         # Launch 3 request in parallel
@@ -129,7 +128,6 @@ class TrudaxRedditScraper:
             if (results_queue.qsize() > 0):
                 while (results_queue.qsize() > 0):
                     message = results_queue.get()
-                    print(message)
                     results[message[0]] = message[1]
             time.sleep(1)
         print(datetime.now())
@@ -146,7 +144,6 @@ class TrudaxRedditScraper:
         elif ("RELEVANCE" in results):
             starting_point = "RELEVANCE"
             starting_list = results["RELEVANCE"]
-        print(starting_list)
         print(starting_point)
 
         # Get the first ids
