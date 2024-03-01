@@ -78,7 +78,7 @@ class TrudaxRedditScraper:
             "nsfw": False,
             "query": keywords,
             "sort": "NEW",
-            "timing": "day",
+            "timing": "hour",
             "types:gif": False,
             "types:image": False,
             "types:link": False,
@@ -93,6 +93,7 @@ class TrudaxRedditScraper:
         list_of_ids = [result['id'] for result in new_results]
         
         run_input["sort"] = "RELEVANCE"
+        run_input["limit"] = 20
         top_results = self.map(run_actor(self.actor_config, run_input))
         for result in top_results:
             if (result['id'] not in list_of_ids):
