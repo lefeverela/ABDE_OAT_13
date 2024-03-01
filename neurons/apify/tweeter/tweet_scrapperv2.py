@@ -1,6 +1,6 @@
 import logging
 from neurons.apify.actors import run_actor, run_actor_async, ActorConfig
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import asyncio
 
 # Setting up logger for debugging and information purposes
@@ -107,8 +107,13 @@ class TwitterScraperV2:
             list: The mapped or transformed data.
         """
         filtered_input = []
+        print("NUMBER OF ORIGINAL TWEETS " + str(len(input))) 
         for item in input:
             if (self.searchterm in item['text']):
+                date_format = "%a %b %d %H:%M:%S %z %Y"
+                parsed_date = datetime.strptime(item["createdAt"], date_format))
+                if ((datetime.now() - parsed_date > timedelta(days=1)) and (len(filtered_input) > 40)):
+                    break
                 filtered_input.append(self.map_item(item))
         print("NUMBER OF VALID TWEETS " + str(len(filtered_input))) 
         return filtered_input
