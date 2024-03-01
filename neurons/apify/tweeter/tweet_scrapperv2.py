@@ -111,7 +111,7 @@ class TwitterScraperV2:
         for item in input:
             if (self.searchterm in item['text']):
                 date_format = "%a %b %d %H:%M:%S %z %Y"
-                parsed_date = datetime.strptime(item["createdAt"], date_format))
+                parsed_date = datetime.strptime(item["createdAt"], date_format)
                 if ((datetime.now() - parsed_date > timedelta(days=1)) and (len(filtered_input) > 40)):
                     break
                 filtered_input.append(self.map_item(item))
