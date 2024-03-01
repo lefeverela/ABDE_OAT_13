@@ -91,46 +91,54 @@ class TrudaxRedditScraper:
             }
 
         # HOUR REQUEST
-        def first_request(run_input, results_queue):
-            new_results = self.map(run_actor(self.actor_config, run_input))
+        def first_request(run_input_local, results_queue):
+            new_results = self.map(run_actor(self.actor_config, run_input_local))
             results_queue.put(["FIRST", new_results])
             return ()
         
         # DAILY REQUEST
-        def second_request(run_input, results_queue):
-            run_input["timing"] = "day"
-            new_results = self.map(run_actor(self.actor_config, run_input))
+        def second_request(run_input_local, results_queue):
+            run_input_local["timing"] = "day"
+            new_results = self.map(run_actor(self.actor_config, run_input_local))
             results_queue.put(["SECOND", new_results])
             return ()
         
         # TOP REQUEST
-        def third_request(run_input, results_queue):
-            run_input["sort"] = "RELEVANCE"
-            run_input["timing"] = "day"
-            new_results = self.map(run_actor(self.actor_config, run_input))
+        def third_request(run_input_local, results_queue):
+            run_input_local["sort"] = "RELEVANCE"
+            run_input_local["timing"] = "day"
+            new_results = self.map(run_actor(self.actor_config, run_input_local))
             results_queue.put(["THIRD", new_results])
             return ()
 
+        # BACKUP
+        def fourth_request(run_input_local, results_queue):
+            run_input_local["sort"] = "RELEVANCE"
+            run_input_local["timing"] = "week"
+            new_results = self.map(run_actor(self.actor_config, run_input_local))
+            results_queue.put(["FOURTH", new_results])
+            return ()
+
         # Launch 3 request in parallel
-        print(datetime.now())
         results_queue = multiprocessing.Manager().Queue() 
-        first_process = multiprocessing.Process(target=first_request, args=[run_input, results_queue])
-        second_process = multiprocessing.Process(target=second_request, args=[run_input, results_queue])
-        third_process = multiprocessing.Process(target=third_request, args=[run_input, results_queue])
+        first_process = multiprocessing.Process(target=first_request, args=[run_input.copy(), results_queue])
+        second_process = multiprocessing.Process(target=second_request, args=[run_input.copy(), results_queue])
+        third_process = multiprocessing.Process(target=third_request, args=[run_input.copy(), results_queue])
+        fourth_process = multiprocessing.Process(target=fourth_request, args=[run_input.copy(), results_queue])
         first_process.start()
         second_process.start()
         third_process.start()
+        fourth_process.start()
 
         # Get results of the requests
         results = {}
         start_time = datetime.now()
-        while (len(results) != 3) and ((datetime.now() - start_time ) < timedelta(minutes=1)):
+        while (len(results) != 4) and ((datetime.now() - start_time ) < timedelta(minutes=1)):
             if (results_queue.qsize() > 0):
                 while (results_queue.qsize() > 0):
                     message = results_queue.get()
                     results[message[0]] = message[1]
             time.sleep(1)
-        print(datetime.now())
 
         # Check results
         starting_point = ""
@@ -141,10 +149,13 @@ class TrudaxRedditScraper:
         elif ("SECOND" in results):
             starting_point = "SECOND"
             starting_list = results["SECOND"]
-        elif ("RELEVANCE" in results):
-            starting_point = "RELEVANCE"
-            starting_list = results["RELEVANCE"]
-
+        elif ("THIRD" in results):
+            starting_point = "THIRD"
+            starting_list = results["THIRD"]
+        elif ("FOURTH" in results):
+            starting_point = "FOURTH"
+            starting_list = results["FOURTH"]
+        
         # Get the first ids
         list_of_ids = []
         if (len(starting_list) > 0):
@@ -154,7 +165,7 @@ class TrudaxRedditScraper:
         if (len(list_of_ids) < min_post) and (len(starting_list) > 0):
             for result in results: 
                 for message in results[result]:
-                    if (message['id'] not in list_of_ids):
+                    if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post)):
                         starting_list.append(message)
                         list_of_ids.append(message['id'])
 
