@@ -23,10 +23,12 @@ import torch
 from datetime import datetime
 import bittensor as bt
 #from neurons.queries import get_query, QueryType, QueryProvider
+from neurons.services.percipio_reddit_lookup import PercipioRedditLookup
 import random
 from dateutil.parser import parse
 
 #reddit_query = get_query(QueryType.REDDIT, QueryProvider.PERCIPIO_REDDIT_LOOKUP)
+reddit_query = 
 
 def calculateScore(responses = [], tag = 'tao'):
     """
