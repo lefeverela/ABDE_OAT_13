@@ -66,14 +66,15 @@ class TrudaxRedditScraper:
             keywords += keyword
 
 
-
+        max_post = 50
+        min_post = 40
         
         run_input = {
             "debugMode": False,
             "dev_dataset_clear": False,
             "dev_dataset_enable": False,
             "dev_transform_enable": False,
-            "limit": 50,
+            "limit": max_post,
             "mode": "posts",
             "nsfw": False,
             "query": keywords,
@@ -88,12 +89,25 @@ class TrudaxRedditScraper:
             }
 
         #print(run_input)
-
+        # FIRST HOUR REQUEST
         new_results = self.map(run_actor(self.actor_config, run_input))
         list_of_ids = [result['id'] for result in new_results]
-        
+
+        # CHECK IF WE HAVE ENOUGH TO GO
+        if (len(list_of_ids) < min_post):
+
+            # THEN DAY REQUEST
+            run_input["timing"] = "day"
+            run_input["limit"] = max_post - len(list_of_ids)
+            new_results_daily = self.map(run_actor(self.actor_config, run_input))
+            for result in new_results_daily:
+                if (result['id'] not in list_of_ids):
+                    new_results.append(result)
+                    list_of_ids.append(result['id'])
+    
+        # THEN RELEVANCE
         run_input["sort"] = "RELEVANCE"
-        run_input["limit"] = 20
+        run_input["limit"] = 10
         top_results = self.map(run_actor(self.actor_config, run_input))
         for result in top_results:
             if (result['id'] not in list_of_ids):
