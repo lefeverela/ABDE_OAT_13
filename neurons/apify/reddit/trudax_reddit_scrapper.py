@@ -42,7 +42,7 @@ class TrudaxRedditScraper:
         """
         self.actor_config = ActorConfig("4YJmyaThjcRuUvQZg")
         self.timeout_secs = 45
-        self.memory_mbytes = 8192 
+        self.memory_mbytes = 32768 
         
     def strip_tags(self, html):
         s = MLStripper()
@@ -144,7 +144,6 @@ class TrudaxRedditScraper:
         elif ("RELEVANCE" in results):
             starting_point = "RELEVANCE"
             starting_list = results["RELEVANCE"]
-        print(starting_point)
 
         # Get the first ids
         list_of_ids = []
