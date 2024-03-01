@@ -93,6 +93,7 @@ class TrudaxRedditScraper:
         # HOUR REQUEST
         def first_request(run_input, results_queue):
             new_results = self.map(run_actor(self.actor_config, run_input))
+            print(new_results)
             results_queue.put("FIRST", new_results)
             return ()
         
@@ -128,6 +129,7 @@ class TrudaxRedditScraper:
             if (results_queue.qsize() > 0):
                 while (results_queue.qsize() > 0):
                     message = results_queue.get()
+                    print(message)
                     results[message[0]] = message[1]
             time.sleep(1)
         print(datetime.now())
@@ -153,7 +155,7 @@ class TrudaxRedditScraper:
             list_of_ids = [result['id'] for result in starting_list]
 
         # Then add until we have the quotas
-        if (len(list_of_ids) < min_post):
+        if (len(list_of_ids) < min_post) and (len(starting_list) > 0):
             for result in results: 
                 for message in results[result]:
                     if (message['id'] not in list_of_ids):
