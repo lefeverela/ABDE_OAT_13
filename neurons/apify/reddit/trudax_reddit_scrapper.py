@@ -161,8 +161,9 @@ class TrudaxRedditScraper:
         # Get the first ids
         list_of_ids = []
         if (len(starting_list) > 0):
-            if (first_search in message['text']):
-                list_of_ids = [result['id'] for result in starting_list]
+            for result in starting_list:
+                if (first_search in result['text']):
+                    list_of_ids = result['id']
 
         # Then add until we have the quotas
         if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
