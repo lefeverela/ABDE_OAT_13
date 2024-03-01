@@ -144,26 +144,28 @@ class TrudaxRedditScraper:
 
         # Check results
         starting_point = ""
-        starting_list = []
         if ("FIRST" in results):
             starting_point = "FIRST"
-            starting_list = results["FIRST"]
         elif ("SECOND" in results):
             starting_point = "SECOND"
-            starting_list = results["SECOND"]
         elif ("THIRD" in results):
             starting_point = "THIRD"
-            starting_list = results["THIRD"]
         elif ("FOURTH" in results):
             starting_point = "FOURTH"
-            starting_list = results["FOURTH"]
         
         # Get the first ids
         list_of_ids = []
-        if (len(starting_list) > 0):
-            for result in starting_list:
+        starting_list = []
+        if (len(results[starting_point]) > 0):
+            for result in results[starting_point]:
                 if (first_search in result['text']):
                     list_of_ids.append(result['id'])
+                    starting_list.append(result)
+
+#date_object = datetime.fromisoformat(item['timestamp'].rstrip('Z'))
+ #               age = datetime.utcnow() - date_object
+
+        
 
         # Then add until we have the quotas
         if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
