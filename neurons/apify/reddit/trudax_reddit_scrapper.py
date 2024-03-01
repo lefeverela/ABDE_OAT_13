@@ -1,8 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
-#import neurons.score.reddit_score 
+import neurons.score.reddit_score 
+import multiprocessing
 import xml.etree.ElementTree
 
 from io import StringIO
@@ -88,34 +90,75 @@ class TrudaxRedditScraper:
             "types:video": False
             }
 
-        #print(run_input)
-        # FIRST HOUR REQUEST
-        new_results = self.map(run_actor(self.actor_config, run_input))
-        list_of_ids = [result['id'] for result in new_results]
-
-        # CHECK IF WE HAVE ENOUGH TO GO
-        if (len(list_of_ids) < min_post):
-
-            # THEN DAY REQUEST
+        # HOUR REQUEST
+        def first_request(run_input, results_queue):
+            new_results = self.map(run_actor(self.actor_config, run_input))
+            results_queue.put("FIRST", new_results)
+            return ()
+        
+        # DAILY REQUEST
+        def second_request(run_input, results_queue):
             run_input["timing"] = "day"
-            run_input["limit"] = max_post - len(list_of_ids)
-            new_results_daily = self.map(run_actor(self.actor_config, run_input))
-            for result in new_results_daily:
-                if (result['id'] not in list_of_ids):
-                    new_results.append(result)
-                    list_of_ids.append(result['id'])
+            new_results = self.map(run_actor(self.actor_config, run_input))
+            results_queue.put("SECOND", new_results)
+            return ()
+        
+        # TOP REQUEST
+        def third_request(run_input, results_queue):
+            run_input["sort"] = "RELEVANCE"
+            run_input["timing"] = "day"
+            new_results = self.map(run_actor(self.actor_config, run_input))
+            results_queue.put("THIRD", new_results)
+            return ()
 
-            # THEN RELEVANCE
-            if (len(list_of_ids) < min_post):
-                run_input["sort"] = "RELEVANCE"
-                run_input["limit"] = max_post - len(list_of_ids)
-                top_results = self.map(run_actor(self.actor_config, run_input))
-                for result in top_results:
-                    if (result['id'] not in list_of_ids):
-                        new_results.append(result)
-                        list_of_ids.append(result['id'])
-                        
-        return (new_results)
+        # Launch 3 request in parallel
+        results_queue = multiprocessing.Manager().Queue() 
+        first_process = multiprocessing.Process(target=first_request, args=[run_input, results_queue])
+        second_process = multiprocessing.Process(target=second_request, args=[run_input, results_queue])
+        third_process = multiprocessing.Process(target=third_request, args=[run_input, results_queue])
+        first_process.start()
+        second_process.start()
+        third_process.start()
+
+        # Get results of the requests
+        results = {}
+        start_time = datetime.now()
+        while (len(results) != 3) and ((datetime.now() - start_time ) < timedelta(minutes=1)):
+            if (results_queue.qsize() > 0):
+                while (results_queue.qsize() > 0):
+                    message = results_queue.get()
+                    results[message[0]] = message[1]
+            time.sleep(1)
+
+        # Check results
+        starting_point = ""
+        starting_list = []
+        if ("FIRST" in results):
+            starting_point = "FIRST"
+            starting_list = results["FIRST"]
+        elif ("SECOND" in results):
+            starting_point = "SECOND"
+            starting_list = results["SECOND"]
+        elif ("RELEVANCE" in results):
+            starting_point = "RELEVANCE"
+            starting_list = results["RELEVANCE"]
+
+        # Get the first ids
+        list_of_ids = []
+        if (len(starting_list) > 0):
+            list_of_ids = [result['id'] for result in starting_list]
+
+        # Then add until we have the quotas
+        if (len(list_of_ids) < min_post):
+            for result in results: 
+                for message in results[result]:
+                    if (message['id'] not in list_of_ids):
+                        starting_list.append(message)
+                        list_of_ids.append(message['id'])
+
+        # Return results
+        return (starting_list)
+        
 
     def map(self, input: list) -> list:
         """
