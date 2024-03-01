@@ -3,7 +3,7 @@ import time
 import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
-import neurons.score.reddit_score 
+#import neurons.score.reddit_score 
 import multiprocessing
 import xml.etree.ElementTree
 
