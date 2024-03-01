@@ -104,15 +104,17 @@ class TrudaxRedditScraper:
                 if (result['id'] not in list_of_ids):
                     new_results.append(result)
                     list_of_ids.append(result['id'])
+
+            if (len(list_of_ids) < min_post):
     
-        # THEN RELEVANCE
-        run_input["sort"] = "RELEVANCE"
-        run_input["limit"] = 10
-        top_results = self.map(run_actor(self.actor_config, run_input))
-        for result in top_results:
-            if (result['id'] not in list_of_ids):
-                new_results.append(result)
-                list_of_ids.append(result['id'])
+                # THEN RELEVANCE
+                run_input["sort"] = "RELEVANCE"
+                run_input["limit"] = 10
+                top_results = self.map(run_actor(self.actor_config, run_input))
+                for result in top_results:
+                    if (result['id'] not in list_of_ids):
+                        new_results.append(result)
+                        list_of_ids.append(result['id'])
         return (new_results)
 
     def map(self, input: list) -> list:
