@@ -86,7 +86,6 @@ class TwitterScraperV2:
         date_format = "%a %b %d %H:%M:%S %z %Y"
         parsed_date = datetime.strptime(item["createdAt"], date_format)
         age_in_seconds = (datetime.now(timezone.utc) - parsed_date).total_seconds()
-        print(age_in_seconds)
         return {
             'id': item['id'], 
             'url': item['url'], 
@@ -110,6 +109,7 @@ class TwitterScraperV2:
             list: The mapped or transformed data.
         """
         filtered_input = []
+        first_search = self.first_search
         print("NUMBER OF ORIGINAL TWEETS " + str(len(input))) 
         for item in input:
             filtered_input.append(self.map_item(item))
@@ -137,7 +137,7 @@ class TwitterScraperV2:
             nb_message_to_send = i + 1
 
             # Check if the message is relevant
-            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check[ab]['title']).lower()):
+            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check['title']).lower()):
                 relevant_count += 1
                 age_sum_relevant +=  message_to_check['age_in_seconds']
 
@@ -166,7 +166,7 @@ class TwitterScraperV2:
                 sorted_message[0]['contribution_all'] = sorted_message[0]['score_messages_all']
 
             # Compute final score if we are in a relevant message
-            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check[ab]['title']).lower()):
+            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check['title']).lower()):
                 relevant_message = message_to_check.copy()
                 relevant_message['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
                 if (len(sorted_message_relevant) > 0):
