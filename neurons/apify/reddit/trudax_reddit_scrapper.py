@@ -3,7 +3,7 @@ import time
 import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
-#import neurons.score.reddit_score 
+import neurons.score.reddit_score 
 import multiprocessing
 import xml.etree.ElementTree
 
@@ -143,37 +143,85 @@ class TrudaxRedditScraper:
             time.sleep(1)
 
         # Check results
-        starting_point = ""
-        if ("FIRST" in results):
-            starting_point = "FIRST"
-        elif ("SECOND" in results):
-            starting_point = "SECOND"
-        elif ("THIRD" in results):
-            starting_point = "THIRD"
-        elif ("FOURTH" in results):
-            starting_point = "FOURTH"
+        #starting_point = ""
+        #if ("FIRST" in results):
+        #    starting_point = "FIRST"
+        #elif ("SECOND" in results):
+        #    starting_point = "SECOND"
+        #elif ("THIRD" in results):
+        #    starting_point = "THIRD"
+        #elif ("FOURTH" in results):
+        #    starting_point = "FOURTH"
         
         # Get the first ids
+        #list_of_ids = []
+        #starting_list = []
+        #if (len(results[starting_point]) > 0):
+        #    for result in results[starting_point]:
+        #        if (first_search.lower() in str(result['text']).lower()):
+        #            list_of_ids.append(result['id'])
+        #            starting_list.append(result)
+
+        # Add all the unique messages in the list
         list_of_ids = []
         starting_list = []
-        if (len(results[starting_point]) > 0):
-            for result in results[starting_point]:
-                if (first_search.lower() in str(result['text']).lower()):
-                    list_of_ids.append(result['id'])
-                    starting_list.append(result)
+        for result in results: 
+            for message in results[result]:
+                if (message['id'] not in list_of_ids):
+                    starting_list.append(message)
+                    list_of_ids.append(message['id'])
 
-#date_object = datetime.fromisoformat(item['timestamp'].rstrip('Z'))
- #               age = datetime.utcnow() - date_object
+        # Sort the message by their age
+        sorted_message = sorted(starting_list, key=lambda message: message['age_in_seconds'])
+
+        # Compute an estimage max average age
+        max_average_age = 0
+        for i in range(0, min(len(sorted_message), 20)):
+            max_average_age += sorted_message[i]['age_in_seconds']
+        if (max_average_age != 0):
+            max_average_age = max_average_age / min(len(sorted_message), 20)
+        
+        # Compute the score of the list has we add messages
+        max_length = 100
+        relevant_count = 0
+        age_sum_relevant, age_sum_all = 0, 0
+        for i in range(0, len(sorted_message)):
+
+            # Extract the current message we are inspecting
+            message_to_check = sorted_message[i]
+            nb_message_to_send = i + 1
+
+            # Check if the message is relevant
+            if (first_search.lower() in str(message_to_check['text']).lower()):
+                relevant_count += 1
+                age_sum_relevant +=  message_to_check['age_in_seconds']
+
+            # Compute our length contribution
+            length_contribution_relevant = (relevant_count + 1) / (max_length + 1) * 0.3
+            length_contribution_all = (nb_message_to_send + 1) / (max_length + 1) * 0.3
+
+            # Compute age contribution
+            age_sum_all += message_to_check['age_in_seconds']
+            age_contribution_relevant = (1 - (age_sum_relevant / relevant_count + 1) / (max_average_age + 1)) * 0.4
+            age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max_average_age + 1)) * 0.4
+
+            # Compute relevancy contribution
+            relevancy_contribution_relevant = relevant_count / relevant_count * 0.2
+            relevancy_contribution_all = relevant_count / nb_message_to_send * 0.2
+
+            # Compute final score
+            sorted_message[i]['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant +
+            sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all +
+
 
         
-
         # Then add until we have the quotas
-        if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
-            for result in results: 
-                for message in results[result]:
-                    if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (first_search.lower() in str(message['text']).lower())):
-                        starting_list.append(message)
-                        list_of_ids.append(message['id'])
+        #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
+        #    for result in results: 
+        #        for message in results[result]:
+        #            if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (first_search.lower() in str(message['text']).lower())):
+        #                starting_list.append(message)
+        #                list_of_ids.append(message['id'])
 
         # Return results
         return (starting_list)
@@ -205,6 +253,8 @@ class TrudaxRedditScraper:
                 formatted_date = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S')
                 milliseconds = datetime_obj.strftime('%f')[:3]  
                 corrected_output_with_milliseconds = f"{formatted_date}.{milliseconds}Z"
+                age_in_seconds = (datetime.utcnow() - datetime_obj).total_seconds()
+                
                 filtered_input.append({
                     'id': item['id'], 
                     'url': item['url'], 
@@ -216,7 +266,8 @@ class TrudaxRedditScraper:
                     'community': item['subreddit']['name'],
                     'username': item['author']['name'],
                     'parent':item['id'], 
-                    'timestamp': corrected_output_with_milliseconds
+                    'timestamp': corrected_output_with_milliseconds,
+                    'age_in_seconds': age_in_seconds
                 })
                 
             except:
