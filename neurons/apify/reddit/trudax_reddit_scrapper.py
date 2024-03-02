@@ -236,9 +236,9 @@ class TrudaxRedditScraper:
         max_relevant, index_relevant = 0, 0
         max_all, index_all = 0, 0
         for ab in range (5, len(sorted_message)):
-            if (sorted_message[ab]['score_messages_relevant'] >= max_relevant):
-                max_relevant = sorted_message[ab]['score_messages_relevant']
-                index_relevant = ab
+            if (sorted_message[ab]['score_messages_all'] >= max_relevant):
+                max_all = sorted_message[ab]['score_messages_all']
+                index_all = ab
         for ab in range (5, len(sorted_message_relevant)):
             if (sorted_message_relevant[ab]['score_messages_relevant'] >= max_relevant):
                 max_relevant = sorted_message_relevant[ab]['score_messages_relevant']
