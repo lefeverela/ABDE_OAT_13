@@ -86,6 +86,7 @@ class TwitterScraperV2:
         date_format = "%a %b %d %H:%M:%S %z %Y"
         parsed_date = datetime.strptime(item["createdAt"], date_format)
         age_in_seconds = (datetime.now(timezone.utc) - parsed_date).total_seconds()
+        print(age_in_seconds)
         return {
             'id': item['id'], 
             'url': item['url'], 
