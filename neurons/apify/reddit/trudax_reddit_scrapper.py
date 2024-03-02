@@ -215,7 +215,7 @@ class TrudaxRedditScraper:
 
         
         for ab in range (0, len(sorted_message)):
-            print(str(i) + ": " + str(sorted_message[ab]['score_messages_relevant']) + ", " + str(sorted_message[ab]['score_messages_all'])
+            print(str(i) + ": " + str(sorted_message[ab]['score_messages_relevant']) + ", " + str(sorted_message[ab]['score_messages_all']))
         
         # Then add until we have the quotas
         #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
