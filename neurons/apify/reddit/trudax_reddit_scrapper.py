@@ -173,6 +173,7 @@ class TrudaxRedditScraper:
                     
         # Sort the message by their age
         sorted_message = sorted(starting_list, key=lambda message: message['age_in_seconds'])
+        sorted_message_relevant = []
 
         # Compute an estimage max average age
         max_average_age = 0
@@ -211,15 +212,22 @@ class TrudaxRedditScraper:
             relevancy_contribution_relevant = relevant_count / relevant_count * 0.2
             relevancy_contribution_all = relevant_count / nb_message_to_send * 0.2
 
-            # Compute final score
-            sorted_message[i]['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
+            # Compute final score for all messages
             sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all + age_contribution_all
             if (i > 0):
-                sorted_message[i]['contribution_relevant'] = sorted_message[i]['score_messages_relevant'] - sorted_message[i-1]['score_messages_relevant']
                 sorted_message[i]['contribution_all'] = sorted_message[i]['score_messages_all'] - sorted_message[i-1]['score_messages_all']
             else:
-                sorted_message[0]['contribution_relevant'] = sorted_message[0]['score_messages_relevant']
                 sorted_message[0]['contribution_all'] = sorted_message[0]['score_messages_all']
+
+            # Compute final score if we are in a relevant message
+            if (first_search.lower() in str(message_to_check['text']).lower()):
+                relevant_message = message_to_check.copy()
+                relevant_message['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
+                if (i > 0):
+                    relevant_message['contribution_relevant'] = relevant_message['score_messages_relevant'] - sorted_message_relevant[len(sorted_message_relevant)-1]['score_messages_relevant']
+                else:
+                    relevant_message['contribution_relevant'] = relevant_message['score_messages_relevant']
+                sorted_message_relevant.append(relevant_message)
 
         # Compute the max score we can get using index methodology
         max_relevant, index_relevant = 0, 0
@@ -228,10 +236,11 @@ class TrudaxRedditScraper:
             if (sorted_message[ab]['score_messages_relevant'] >= max_relevant):
                 max_relevant = sorted_message[ab]['score_messages_relevant']
                 index_relevant = ab
-            if (sorted_message[ab]['score_messages_all'] >= max_all):
-                max_all = sorted_message[ab]['score_messages_all']
-                index_all = ab
-
+        for ab in range (5, len(sorted_message_relevant)):
+            if (sorted_message_relevant[ab]['score_messages_relevant'] >= max_relevant):
+                max_relevant = sorted_message_relevant[ab]['score_messages_relevant']
+                index_relevant = ab
+                
         # Compute new message group using the contribution factor
         contribution_relevant = []
         contribution_all = []
@@ -266,6 +275,15 @@ class TrudaxRedditScraper:
         print("MOST RELEVANT CONTRIBUTION RELEVANT " + str(len(contribution_relevant)) + ", " + str(score_contribution_relevant))
         print("MOST RELEVANT CONTRIBUTION ALL " + str(len(contribution_all)) + ", " + str(score_contribution_all))
 
+        if (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == max_relevant):
+            return (sorted_message_relevant[0 : index_relevant])
+        elif (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == max_all):
+            return (sorted_message[0 : index_all])
+        elif (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == score_contribution_relevant):
+            return (contribution_relevant)
+        elif (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == score_contribution_all):
+            return (contribution_all)
+            
         
         # Then add until we have the quotas
         #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
