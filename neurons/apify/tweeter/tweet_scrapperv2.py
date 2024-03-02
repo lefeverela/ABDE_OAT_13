@@ -56,7 +56,7 @@ class TwitterScraperV2:
           "tweetLanguage": "en"
         }
 
-        self.searchterm = search_queries[0]
+        self.first_search = search_queries[0]
 
         self.keywords_past.append(search_queries)
         print(self.keywords_past)
@@ -85,6 +85,7 @@ class TwitterScraperV2:
 
         date_format = "%a %b %d %H:%M:%S %z %Y"
         parsed_date = datetime.strptime(item["createdAt"], date_format)
+        age_in_seconds = (datetime.now(timezone.utc) - parsed_date).total_seconds()
         return {
             'id': item['id'], 
             'url': item['url'], 
@@ -93,7 +94,8 @@ class TwitterScraperV2:
             'images': images, 
             'username': item['author']['userName'],
             'hashtags': hashtags,
-            'timestamp': self.format_date(parsed_date)
+            'timestamp': self.format_date(parsed_date),
+            'age_in_seconds': age_in_seconds
         } 
 
     def map(self, input: list) -> list:
@@ -108,6 +110,141 @@ class TwitterScraperV2:
         """
         filtered_input = []
         print("NUMBER OF ORIGINAL TWEETS " + str(len(input))) 
+
+        # Sort the message by their age
+        sorted_message = sorted(input, key=lambda message: message['age_in_seconds'])
+        sorted_message_relevant = []
+
+        # Compute an estimage max average age
+        max_average_age = 0
+        for i in range(0, min(len(sorted_message), 20)):
+            max_average_age += sorted_message[i]['age_in_seconds']
+        if (max_average_age != 0):
+            max_average_age = max_average_age / min(len(sorted_message), 20)
+        
+        # Compute the score of the list has we add messages
+        max_length = 100
+        relevant_count = 0
+        age_sum_relevant, age_sum_all = 0, 0
+        age_contribution_relevant = 0
+        for i in range(0, len(sorted_message)):
+
+            # Extract the current message we are inspecting
+            message_to_check = sorted_message[i]
+            nb_message_to_send = i + 1
+
+            # Check if the message is relevant
+            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check[ab]['title']).lower()):
+                relevant_count += 1
+                age_sum_relevant +=  message_to_check['age_in_seconds']
+
+            # Compute our length contribution
+            length_contribution_relevant = (relevant_count + 1) / (max(max_length, relevant_count) + 1) * 0.3
+            length_contribution_all = (nb_message_to_send + 1) / (max(max_length, nb_message_to_send) + 1) * 0.3
+
+            # Compute age contribution
+            age_sum_all += message_to_check['age_in_seconds']
+            if (relevant_count > 0):
+                age_contribution_relevant = (1 - (age_sum_relevant / relevant_count + 1) / (max(max_average_age, age_sum_relevant / relevant_count) + 1)) * 0.4
+            age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max(max_average_age, age_sum_all / nb_message_to_send ) + 1)) * 0.4
+
+            # Compute relevancy contribution
+            if (relevant_count > 0):
+                relevancy_contribution_relevant = relevant_count / relevant_count * 0.2
+            else:
+                relevancy_contribution_relevant = 0
+            relevancy_contribution_all = relevant_count / nb_message_to_send * 0.2
+
+            # Compute final score for all messages
+            sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all + age_contribution_all
+            if (i > 0):
+                sorted_message[i]['contribution_all'] = sorted_message[i]['score_messages_all'] - sorted_message[i-1]['score_messages_all']
+            else:
+                sorted_message[0]['contribution_all'] = sorted_message[0]['score_messages_all']
+
+            # Compute final score if we are in a relevant message
+            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check[ab]['title']).lower()):
+                relevant_message = message_to_check.copy()
+                relevant_message['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
+                if (len(sorted_message_relevant) > 0):
+                    relevant_message['contribution_relevant'] = relevant_message['score_messages_relevant'] - sorted_message_relevant[len(sorted_message_relevant)-1]['score_messages_relevant']
+                else:
+                    relevant_message['contribution_relevant'] = relevant_message['score_messages_relevant']
+                sorted_message_relevant.append(relevant_message)
+
+        # Compute the max score we can get using index methodology
+        max_relevant, index_relevant = 0, 0
+        max_all, index_all = 0, 0
+        for ab in range (5, len(sorted_message_relevant)):
+            if (sorted_message_relevant[ab]['score_messages_relevant'] >= max_relevant):
+                max_relevant = sorted_message_relevant[ab]['score_messages_relevant']
+                index_relevant = ab
+                
+        for ab in range (5, len(sorted_message)):
+            if (sorted_message[ab]['score_messages_all'] >= max_all):
+                max_all = sorted_message[ab]['score_messages_all']
+                index_all = ab
+                
+        # Compute new message group using the contribution factor
+        contribution_relevant = []
+        contribution_all = []
+        contribution_relevant_count = 0
+        age_sum_contribution_relevant = 0
+        age_sum_contribution_all = 0
+        for ab in range (0, len(sorted_message_relevant)):
+            if (sorted_message_relevant[ab]['contribution_relevant'] > 0):
+                contribution_relevant.append(sorted_message_relevant[ab])
+                age_sum_contribution_relevant += sorted_message_relevant[ab]['age_in_seconds']
+                
+        for ab in range (0, len(sorted_message)):
+            if (sorted_message[ab]['contribution_all'] > 0):
+                contribution_all.append(sorted_message[ab])
+                age_sum_contribution_all += sorted_message[ab]['age_in_seconds']
+                if (first_search.lower() in str(sorted_message[ab]['text']).lower()) or (first_search.lower() in str(sorted_message[ab]['title']).lower()):
+                    contribution_relevant_count += 1
+                    
+        # Then compute the score of those 2 new groups
+        # Group 1
+        length_contribution = (len(contribution_relevant) + 1) / (max(max_length, len(contribution_relevant)) + 1) * 0.3
+        relevancy_contribution = 0.2
+        if (len(contribution_relevant) > 0):
+            age_contribution = (1 - (age_sum_contribution_relevant / len(contribution_relevant) + 1) / (max(max_average_age, age_sum_contribution_relevant / len(contribution_relevant)) + 1)) * 0.4
+        else:
+            age_contribution = 0
+        score_contribution_relevant = relevancy_contribution + length_contribution + age_contribution
+        
+        # Group 2
+        if (len(contribution_all) > 0):
+            length_contribution = (len(contribution_all) + 1) / (max(max_length, len(contribution_all)) + 1) * 0.3
+            relevancy_contribution = contribution_relevant_count / len(contribution_all) * 0.2
+            age_contribution = (1 - (age_sum_contribution_all / len(contribution_all) + 1) / (max(max_average_age, age_sum_contribution_all / len(contribution_all)) + 1)) * 0.4
+            score_contribution_all = relevancy_contribution + length_contribution + age_contribution
+        else:
+            score_contribution_all = 0
+
+        print("MOST RELEVANT INDEX " + str(index_relevant) + ", " + str(max_relevant))
+        print("MOST RELEVANT INDEX ALL " + str(index_all) + ", " + str(max_all))
+        print("MOST RELEVANT CONTRIBUTION RELEVANT " + str(len(contribution_relevant)) + ", " + str(score_contribution_relevant))
+        print("MOST RELEVANT CONTRIBUTION ALL " + str(len(contribution_all)) + ", " + str(score_contribution_all))
+
+        if (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == max_relevant):
+            return (sorted_message_relevant[0 : index_relevant])
+        elif (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == max_all):
+            return (sorted_message[0 : index_all])
+        elif (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == score_contribution_relevant):
+            return (contribution_relevant)
+        elif (max(max_relevant, max_all, score_contribution_relevant, score_contribution_all) == score_contribution_all):
+            return (contribution_all)
+
+
+
+
+
+
+
+
+
+        
         for item in input:
             if (self.searchterm.lower() in str(item['text']).lower()):
                 date_format = "%a %b %d %H:%M:%S %z %Y"
@@ -115,13 +252,20 @@ class TwitterScraperV2:
                 #if ((datetime.now() - parsed_date > timedelta(days=1)) and (len(filtered_input) > 40)):
                 #    break
                 filtered_input.append(self.map_item(item))
+
+
+
+
+
+
+        
         print("NUMBER OF VALID TWEETS " + str(len(filtered_input))) 
         return filtered_input
 
 
 if __name__ == '__main__':
     # Initialize the tweet query mechanism
-    query = MicroworldsTwitterScraper()
+    query = TwitterScraperV2()
 
     # Execute the query for the "bitcoin" search term
     data_set = query.execute(search_queries=["bitcoin"], limit_number=10)
