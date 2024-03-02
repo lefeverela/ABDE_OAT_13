@@ -158,7 +158,7 @@ class TrudaxRedditScraper:
         starting_list = []
         if (len(results[starting_point]) > 0):
             for result in results[starting_point]:
-                if (first_search.low() in str(result['text']).low()):
+                if (first_search.lower() in str(result['text']).lower()):
                     list_of_ids.append(result['id'])
                     starting_list.append(result)
 
@@ -171,7 +171,7 @@ class TrudaxRedditScraper:
         if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
             for result in results: 
                 for message in results[result]:
-                    if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (first_search.low() in str(message['text']).low())):
+                    if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (first_search.lower() in str(message['text']).lower())):
                         starting_list.append(message)
                         list_of_ids.append(message['id'])
 
