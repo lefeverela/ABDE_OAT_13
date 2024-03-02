@@ -214,20 +214,75 @@ class TrudaxRedditScraper:
             # Compute final score
             sorted_message[i]['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
             sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all + age_contribution_all
+            if (i > 0):
+                sorted_message[i]['contribution_relevant'] = sorted_message[i]['score_messages_relevant'] - sorted_message[i-1]['score_messages_relevant']
+                sorted_message[i]['contribution_all'] = sorted_message[i]['score_messages_all'] - sorted_message[i-1]['score_messages_all']
 
+        # Compute the max score we can get using index methodology
         max_relevant, index_relevant = 0, 0
         max_all, index_all = 0, 0
-        for ab in range (0, len(sorted_message)):
-            print(sorted_message[ab]['score_messages_relevant'])
-            print(sorted_message[ab]['score_messages_all'])
-            if (sorted_message[ab]['score_messages_relevant'] > max_relevant):
+        for ab in range (10, len(sorted_message)):
+            if (sorted_message[ab]['score_messages_relevant'] >= max_relevant):
                 max_relevant = sorted_message[ab]['score_messages_relevant']
                 index_relevant = ab
-            if (sorted_message[ab]['score_messages_all'] > max_all):
+            if (sorted_message[ab]['score_messages_all'] >= max_all):
                 max_all = sorted_message[ab]['score_messages_all']
                 index_all = ab
-        print("MOST RELEVANT INDEX " + str(index_relevant))
-        print("MOST RELEVANT ALL " + str(index_all))
+
+        # Compute new message group using the contribution factor
+        contribution_relevant = []
+        contribution_all = []
+        contribution_relevant_count = 0
+        age_sum_contribution_relevant = 0
+        age_sum_contribution_all = 0
+        for ab in range (0, len(sorted_message)):
+            if (sorted_message[ab]['contribution_relevant'] > 0):
+                contribution_relevant.append(sorted_message[ab])
+                age_sum_contribution_relevant += sorted_message[ab]['age_in_seconds']
+            if (sorted_message[ab]['contribution_all'] > 0):
+                contribution_all.append(sorted_message[ab])
+                age_sum_contribution_all +=  sorted_message[ab]['age_in_seconds']
+                if (first_search.lower() in str(sorted_message[ab]['text']).lower()):
+                    contribution_relevant_count += 1
+                    
+
+        # Then compute the score of those 2 new groups
+        length_contribution = (len(contribution_relevant) + 1) / (max_length + 1) * 0.3
+        relevancy_contribution = 0.2
+        score_contribution_relevant = relevancy_contribution + length_contribution + age_contribution
+
+        length_contribution = (len(contribution_all) + 1) / (max_length + 1) * 0.3
+        relevancy_contribution = contribution_relevant / len(contribution_all) * 0.2
+        score_contribution_all = relevancy_contribution + length_contribution + age_contribution
+        
+        for i in range(0, len(contribution_relevant)):
+
+            # Extract the current message we are inspecting
+            message_to_check = sorted_message[i]
+            nb_message_to_send = i + 1
+
+            # Check if the message is relevant
+            if (first_search.lower() in str(message_to_check['text']).lower()):
+                relevant_count += 1
+                age_sum_relevant +=  message_to_check['age_in_seconds']
+
+            # Compute our length contribution
+            length_contribution_all = (nb_message_to_send + 1) / (max_length + 1) * 0.3
+
+            # Compute age contribution
+            age_sum_all += message_to_check['age_in_seconds']
+            if (contribution_relevant_count > 0):
+                age_contribution_relevant = (1 - (age_sum_relevant / contribution_relevant_count + 1) / (max_average_age + 1)) * 0.4
+            else:
+                age_contribution_relevant = 0
+            age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max_average_age + 1)) * 0.4
+
+        
+        print("MOST RELEVANT INDEX " + str(index_relevant) + ", " + str(max_relevant))
+        print("MOST RELEVANT INDEX ALL " + str(index_all) + ", " + str(max_all))
+        print("MOST RELEVANT CONTRIBUTION RELEVANT " + str(score_contribution_relevant))
+        print("MOST RELEVANT CONTRIBUTION ALL " + str(score_contribution_all))
+
         
         # Then add until we have the quotas
         #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
