@@ -33,6 +33,7 @@ class TwitterScraperV2:
             "urls": [url],
             "maxTweets": max_tweets
         }
+        self.actor_config = ActorConfig("61RPP7dywgiy0JPD0")
         return await run_actor_async(self.actor_config, run_input)
 
     
