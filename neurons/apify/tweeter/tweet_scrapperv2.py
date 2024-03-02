@@ -91,6 +91,7 @@ class TwitterScraperV2:
             'url': item['url'], 
             'text': item.get('text') or item['text'], 
             'likes': item['likeCount'], 
+            'title': "",
             'images': images, 
             'username': item['author']['userName'],
             'hashtags': hashtags,
