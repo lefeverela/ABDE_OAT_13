@@ -53,6 +53,10 @@ def get_config():
     bt.wallet.add_args(parser)
     # Adds axon specific arguments i.e. --axon.port ...
     bt.axon.add_args(parser)
+
+    print("MAX WORKERS " + str(config.axon.max_workers))
+
+    
     # Activating the parser to read any command-line inputs.
     # To print help message, run python3 neurons/miner.py --help
     config = bt.config(parser)
