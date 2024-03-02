@@ -54,9 +54,6 @@ def get_config():
     # Adds axon specific arguments i.e. --axon.port ...
     bt.axon.add_args(parser)
 
-    print("MAX WORKERS " + str(config.axon.max_workers))
-
-    
     # Activating the parser to read any command-line inputs.
     # To print help message, run python3 neurons/miner.py --help
     config = bt.config(parser)
@@ -72,6 +69,8 @@ def get_config():
             'miner',
         )
     )
+    print("MAX WORKERS " + str(config.axon.max_workers))
+    
     # Ensure the directory for logging exists, else create one.
     if not os.path.exists(config.full_path): os.makedirs(config.full_path, exist_ok=True)
     return config
