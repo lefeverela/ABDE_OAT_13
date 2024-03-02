@@ -46,6 +46,7 @@ class TwitterScraperV2:
         Search for tweets by url.
         """
         results = asyncio.run(self.distributedSearchByUrl(urls, max_tweets_per_url))
+        print(results)
         flattened_results = [item for sublist in results for item in sublist]
         return self.map(flattened_results)
 
