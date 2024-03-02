@@ -217,6 +217,9 @@ class TrudaxRedditScraper:
             if (i > 0):
                 sorted_message[i]['contribution_relevant'] = sorted_message[i]['score_messages_relevant'] - sorted_message[i-1]['score_messages_relevant']
                 sorted_message[i]['contribution_all'] = sorted_message[i]['score_messages_all'] - sorted_message[i-1]['score_messages_all']
+            else:
+                sorted_message[0]['contribution_relevant'] = sorted_message[0]['score_messages_relevant']
+                sorted_message[0]['contribution_all'] = sorted_message[0]['score_messages_all']
 
         # Compute the max score we can get using index methodology
         max_relevant, index_relevant = 0, 0
