@@ -204,8 +204,8 @@ class TrudaxRedditScraper:
             # Compute age contribution
             age_sum_all += message_to_check['age_in_seconds']
             if (relevant_count > 0):
-                age_contribution_relevant = (1 - (age_sum_relevant / relevant_count + 1) / (max(max_average_age, age_sum_relevant / relevant_count + 1) + 1)) * 0.4
-            age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max(max_average_age, age_sum_all / nb_message_to_send + 1) + 1)) * 0.4
+                age_contribution_relevant = (1 - (age_sum_relevant / relevant_count + 1) / (max(max_average_age, age_sum_relevant / relevant_count) + 1)) * 0.4
+            age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max(max_average_age, age_sum_all / nb_message_to_send ) + 1)) * 0.4
 
             # Compute relevancy contribution
             relevancy_contribution_relevant = relevant_count / relevant_count * 0.2
@@ -252,12 +252,12 @@ class TrudaxRedditScraper:
         # Group 1
         length_contribution = (len(contribution_relevant) + 1) / (max_length + 1) * 0.3
         relevancy_contribution = 0.2
-        age_contribution = (1 - (age_sum_contribution_relevant / len(contribution_relevant) + 1) / (max_average_age + 1)) * 0.4
+        age_contribution = (1 - (age_sum_contribution_relevant / len(contribution_relevant) + 1) / (max(max_average_age, age_sum_contribution_relevant / len(contribution_relevant)) + 1)) * 0.4
         score_contribution_relevant = relevancy_contribution + length_contribution + age_contribution
         # Group 2
         length_contribution = (len(contribution_all) + 1) / (max_length + 1) * 0.3
         relevancy_contribution = contribution_relevant_count / len(contribution_all) * 0.2
-        age_contribution = (1 - (age_sum_contribution_all / len(contribution_all) + 1) / (max_average_age + 1)) * 0.4
+        age_contribution = (1 - (age_sum_contribution_all / len(contribution_all) + 1) / (max(max_average_age, age_sum_contribution_all / len(contribution_all)) + 1)) * 0.4
         score_contribution_all = relevancy_contribution + length_contribution + age_contribution
         
 
