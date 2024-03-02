@@ -182,7 +182,7 @@ class TrudaxRedditScraper:
             max_average_age = max_average_age / min(len(sorted_message), 20)
         
         # Compute the score of the list has we add messages
-        max_length = max(100, len(sorted_message))
+        max_length = 100
         relevant_count = 0
         age_sum_relevant, age_sum_all = 0, 0
         age_contribution_relevant = 0
@@ -198,8 +198,8 @@ class TrudaxRedditScraper:
                 age_sum_relevant +=  message_to_check['age_in_seconds']
 
             # Compute our length contribution
-            length_contribution_relevant = (relevant_count + 1) / (max_length + 1) * 0.3
-            length_contribution_all = (nb_message_to_send + 1) / (max_length + 1) * 0.3
+            length_contribution_relevant = (relevant_count + 1) / (max(max_length, relevant_count) + 1) * 0.3
+            length_contribution_all = (nb_message_to_send + 1) / (max(max_length, nb_message_to_send) + 1) * 0.3
 
             # Compute age contribution
             age_sum_all += message_to_check['age_in_seconds']
@@ -244,18 +244,18 @@ class TrudaxRedditScraper:
                 age_sum_contribution_relevant += sorted_message[ab]['age_in_seconds']
             if (sorted_message[ab]['contribution_all'] > 0):
                 contribution_all.append(sorted_message[ab])
-                age_sum_contribution_all +=  sorted_message[ab]['age_in_seconds']
+                age_sum_contribution_all += sorted_message[ab]['age_in_seconds']
                 if (first_search.lower() in str(sorted_message[ab]['text']).lower()):
                     contribution_relevant_count += 1
                     
         # Then compute the score of those 2 new groups
         # Group 1
-        length_contribution = (len(contribution_relevant) + 1) / (max_length + 1) * 0.3
+        length_contribution = (len(contribution_relevant) + 1) / (max(max_length, len(contribution_relevant)) + 1) * 0.3
         relevancy_contribution = 0.2
         age_contribution = (1 - (age_sum_contribution_relevant / len(contribution_relevant) + 1) / (max(max_average_age, age_sum_contribution_relevant / len(contribution_relevant)) + 1)) * 0.4
         score_contribution_relevant = relevancy_contribution + length_contribution + age_contribution
         # Group 2
-        length_contribution = (len(contribution_all) + 1) / (max_length + 1) * 0.3
+        length_contribution = (len(contribution_all) + 1) / (max(max_length, len(contribution_all)) + 1) * 0.3
         relevancy_contribution = contribution_relevant_count / len(contribution_all) * 0.2
         age_contribution = (1 - (age_sum_contribution_all / len(contribution_all) + 1) / (max(max_average_age, age_sum_contribution_all / len(contribution_all)) + 1)) * 0.4
         score_contribution_all = relevancy_contribution + length_contribution + age_contribution
