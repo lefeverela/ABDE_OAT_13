@@ -109,7 +109,7 @@ class TwitterScraperV2:
         filtered_input = []
         print("NUMBER OF ORIGINAL TWEETS " + str(len(input))) 
         for item in input:
-            if (self.searchterm.low() in str(item['text']).low()):
+            if (self.searchterm.lower() in str(item['text']).lower()):
                 date_format = "%a %b %d %H:%M:%S %z %Y"
                 #parsed_date = datetime.strptime(item["createdAt"], date_format)
                 #if ((datetime.now() - parsed_date > timedelta(days=1)) and (len(filtered_input) > 40)):
