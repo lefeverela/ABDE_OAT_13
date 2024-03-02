@@ -267,8 +267,12 @@ class TrudaxRedditScraper:
         # Group 1
         length_contribution = (len(contribution_relevant) + 1) / (max(max_length, len(contribution_relevant)) + 1) * 0.3
         relevancy_contribution = 0.2
-        age_contribution = (1 - (age_sum_contribution_relevant / len(contribution_relevant) + 1) / (max(max_average_age, age_sum_contribution_relevant / len(contribution_relevant)) + 1)) * 0.4
+        if (len(contribution_relevant) > 0):
+            age_contribution = (1 - (age_sum_contribution_relevant / len(contribution_relevant) + 1) / (max(max_average_age, age_sum_contribution_relevant / len(contribution_relevant)) + 1)) * 0.4
+        else:
+            age_contribution = 0
         score_contribution_relevant = relevancy_contribution + length_contribution + age_contribution
+        
         # Group 2
         length_contribution = (len(contribution_all) + 1) / (max(max_length, len(contribution_all)) + 1) * 0.3
         relevancy_contribution = contribution_relevant_count / len(contribution_all) * 0.2
