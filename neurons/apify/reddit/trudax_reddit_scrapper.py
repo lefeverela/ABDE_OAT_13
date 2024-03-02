@@ -185,6 +185,7 @@ class TrudaxRedditScraper:
         max_length = max(100, len(sorted_message))
         relevant_count = 0
         age_sum_relevant, age_sum_all = 0, 0
+        age_contribution_relevant = 0
         for i in range(0, len(sorted_message)):
 
             # Extract the current message we are inspecting
@@ -202,7 +203,8 @@ class TrudaxRedditScraper:
 
             # Compute age contribution
             age_sum_all += message_to_check['age_in_seconds']
-            age_contribution_relevant = (1 - (age_sum_relevant / relevant_count + 1) / (max_average_age + 1)) * 0.4
+            if (relevant_count > 0):
+                age_contribution_relevant = (1 - (age_sum_relevant / relevant_count + 1) / (max_average_age + 1)) * 0.4
             age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max_average_age + 1)) * 0.4
 
             # Compute relevancy contribution
