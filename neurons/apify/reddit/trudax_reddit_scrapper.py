@@ -226,7 +226,7 @@ class TrudaxRedditScraper:
             if (first_search.lower() in str(message_to_check['text']).lower()):
                 relevant_message = message_to_check.copy()
                 relevant_message['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
-                if (i > 0):
+                if (len(sorted_message_relevant) > 0):
                     relevant_message['contribution_relevant'] = relevant_message['score_messages_relevant'] - sorted_message_relevant[len(sorted_message_relevant)-1]['score_messages_relevant']
                 else:
                     relevant_message['contribution_relevant'] = relevant_message['score_messages_relevant']
