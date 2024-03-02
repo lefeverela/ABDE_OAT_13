@@ -213,9 +213,17 @@ class TrudaxRedditScraper:
             sorted_message[i]['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
             sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all + age_contribution_all
 
-        
+        max_relevant, index_relevant = 0, 0
+        max_all, index_all = 0, 0
         for ab in range (0, len(sorted_message)):
-            print(str(i) + ": " + str(sorted_message[ab]['score_messages_relevant']) + ", " + str(sorted_message[ab]['score_messages_all']))
+            if (sorted_message[ab]['score_messages_relevant'] > max_relevant):
+                max_relevant = sorted_message[ab]['score_messages_relevant']
+                index_relevant = ab
+            if (sorted_message[ab]['score_messages_all'] > max_all):
+                max_all = sorted_message[ab]['score_messages_all']
+                index_all = ab
+        print("MOST RELEVANT INDEX " + str(index_relevant))
+        print("MOST RELEVANT ALL " + str(index_all))
         
         # Then add until we have the quotas
         #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
@@ -251,7 +259,6 @@ class TrudaxRedditScraper:
             try:
                 #print(item['content'])
                 original_string = item['created_at']
-                print(original_string)
                 datetime_obj = datetime.strptime(original_string, '%Y-%m-%dT%H:%M:%S.%f%z')
                 formatted_date = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S')
                 milliseconds = datetime_obj.strftime('%f')[:3]  
