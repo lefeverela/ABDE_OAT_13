@@ -25,7 +25,28 @@ class TwitterScraperV2:
 
         self.keywords_past = []
 
+    
+    async def searchSingleUrl(self, url: str, max_tweets: int):
+        run_input = {
+            "maxRequestRetries": 3,
+            "searchMode": "live",
+            "urls": [url],
+            "maxTweets": max_tweets
+        }
+        return await run_actor_async(self.actor_config, run_input)
 
+    
+    async def distributedSearchByUrl(self, urls: list, max_tweets_per_url: int = 1):
+        return await asyncio.gather(*(self.searchSingleUrl(url, max_tweets=max_tweets_per_url) for url in urls))
+
+    
+    def searchByUrl(self, urls: list, max_tweets_per_url: int = 1):
+        """
+        Search for tweets by url.
+        """
+        results = asyncio.run(self.distributedSearchByUrl(urls, max_tweets_per_url))
+        flattened_results = [item for sublist in results for item in sublist]
+        return self.map(flattened_results)
 
     
     def execute(self, search_queries: list = ["bittensor"], limit_number: int = 15, validator_key: str = "None", validator_version: str = None, miner_uid: int = 0) -> list:
