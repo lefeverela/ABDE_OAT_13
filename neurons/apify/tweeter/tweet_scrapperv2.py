@@ -288,6 +288,7 @@ if __name__ == '__main__':
 
     urls = [tweet['url'] for tweet in data_set]
     print(f"Fetched {len(urls)} urls: {urls}")
+    urls = urls[0:10]
 
     data_set = query.searchByUrl(urls=urls)
 
