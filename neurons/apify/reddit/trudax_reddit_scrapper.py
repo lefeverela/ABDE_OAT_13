@@ -235,14 +235,14 @@ class TrudaxRedditScraper:
         # Compute the max score we can get using index methodology
         max_relevant, index_relevant = 0, 0
         max_all, index_all = 0, 0
-        for ab in range (5, len(sorted_message)):
-            if (sorted_message[ab]['score_messages_all'] >= max_relevant):
-                max_all = sorted_message[ab]['score_messages_all']
-                index_all = ab
         for ab in range (5, len(sorted_message_relevant)):
             if (sorted_message_relevant[ab]['score_messages_relevant'] >= max_relevant):
                 max_relevant = sorted_message_relevant[ab]['score_messages_relevant']
                 index_relevant = ab
+        for ab in range (5, len(sorted_message)):
+            if (sorted_message[ab]['score_messages_all'] >= max_all):
+                max_all = sorted_message[ab]['score_messages_all']
+                index_all = ab
                 
         # Compute new message group using the contribution factor
         contribution_relevant = []
@@ -250,15 +250,16 @@ class TrudaxRedditScraper:
         contribution_relevant_count = 0
         age_sum_contribution_relevant = 0
         age_sum_contribution_all = 0
-        for ab in range (0, len(sorted_message)):
-            if (sorted_message[ab]['contribution_relevant'] > 0):
-                contribution_relevant.append(sorted_message[ab])
-                age_sum_contribution_relevant += sorted_message[ab]['age_in_seconds']
         for ab in range (0, len(sorted_message_relevant)):
-            if (sorted_message_relevant[ab]['contribution_all'] > 0):
-                contribution_all.append(sorted_message_relevant[ab])
-                age_sum_contribution_all += sorted_message_relevant[ab]['age_in_seconds']
-                if (first_search.lower() in str(sorted_message_relevant[ab]['text']).lower()):
+            if (sorted_message_relevant[ab]['contribution_relevant'] > 0):
+                contribution_relevant.append(sorted_message_relevant[ab])
+                age_sum_contribution_relevant += sorted_message_relevant[ab]['age_in_seconds']
+                
+        for ab in range (0, len(sorted_message)):
+            if (sorted_message[ab]['contribution_all'] > 0):
+                contribution_all.append(sorted_message[ab])
+                age_sum_contribution_all += sorted_message[ab]['age_in_seconds']
+                if (first_search.lower() in str(sorted_message[ab]['text']).lower()):
                     contribution_relevant_count += 1
                     
         # Then compute the score of those 2 new groups
