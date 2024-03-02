@@ -171,8 +171,11 @@ class TrudaxRedditScraper:
                     starting_list.append(message)
                     list_of_ids.append(message['id'])
 
+        print(starting_list)
+
         # Sort the message by their age
         sorted_message = sorted(starting_list, key=lambda message: message['age_in_seconds'])
+        print(sorted_message)
 
         # Compute an estimage max average age
         max_average_age = 0
