@@ -210,10 +210,12 @@ class TrudaxRedditScraper:
             relevancy_contribution_all = relevant_count / nb_message_to_send * 0.2
 
             # Compute final score
-            sorted_message[i]['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant +
-            sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all +
+            sorted_message[i]['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
+            sorted_message[i]['score_messages_all'] = relevancy_contribution_all + length_contribution_all + age_contribution_all
 
-
+        
+        for ab in range (0, len(sorted_message)):
+            print(str(i) + ": " + str(sorted_message[ab]['score_messages_relevant']) + ", " + str(sorted_message[ab]['score_messages_all'])
         
         # Then add until we have the quotas
         #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
@@ -224,7 +226,7 @@ class TrudaxRedditScraper:
         #                list_of_ids.append(message['id'])
 
         # Return results
-        return (starting_list)
+        return (sorted_message)
         
 
     def map(self, input: list) -> list:
