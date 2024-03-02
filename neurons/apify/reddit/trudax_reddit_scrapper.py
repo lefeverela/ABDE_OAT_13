@@ -209,7 +209,10 @@ class TrudaxRedditScraper:
             age_contribution_all = (1 - (age_sum_all / nb_message_to_send + 1) / (max(max_average_age, age_sum_all / nb_message_to_send ) + 1)) * 0.4
 
             # Compute relevancy contribution
-            relevancy_contribution_relevant = relevant_count / relevant_count * 0.2
+            if (relevant_count > 0):
+                relevancy_contribution_relevant = relevant_count / relevant_count * 0.2
+            else:
+                relevancy_contribution_relevant = 0
             relevancy_contribution_all = relevant_count / nb_message_to_send * 0.2
 
             # Compute final score for all messages
@@ -251,10 +254,11 @@ class TrudaxRedditScraper:
             if (sorted_message[ab]['contribution_relevant'] > 0):
                 contribution_relevant.append(sorted_message[ab])
                 age_sum_contribution_relevant += sorted_message[ab]['age_in_seconds']
-            if (sorted_message[ab]['contribution_all'] > 0):
-                contribution_all.append(sorted_message[ab])
-                age_sum_contribution_all += sorted_message[ab]['age_in_seconds']
-                if (first_search.lower() in str(sorted_message[ab]['text']).lower()):
+        for ab in range (0, len(sorted_message_relevant)):
+            if (sorted_message_relevant[ab]['contribution_all'] > 0):
+                contribution_all.append(sorted_message_relevant[ab])
+                age_sum_contribution_all += sorted_message_relevant[ab]['age_in_seconds']
+                if (first_search.lower() in str(sorted_message_relevant[ab]['text']).lower()):
                     contribution_relevant_count += 1
                     
         # Then compute the score of those 2 new groups
