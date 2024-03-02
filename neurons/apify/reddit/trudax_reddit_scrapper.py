@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import time
 import logging
 import traceback
@@ -170,12 +170,9 @@ class TrudaxRedditScraper:
                 if (message['id'] not in list_of_ids):
                     starting_list.append(message)
                     list_of_ids.append(message['id'])
-
-        print(starting_list)
-
+                    
         # Sort the message by their age
         sorted_message = sorted(starting_list, key=lambda message: message['age_in_seconds'])
-        print(sorted_message)
 
         # Compute an estimage max average age
         max_average_age = 0
@@ -259,7 +256,7 @@ class TrudaxRedditScraper:
                 formatted_date = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S')
                 milliseconds = datetime_obj.strftime('%f')[:3]  
                 corrected_output_with_milliseconds = f"{formatted_date}.{milliseconds}Z"
-                age_in_seconds = (datetime.utcnow() - datetime_obj).total_seconds()
+                age_in_seconds = (datetime.now(timezone.utc) - datetime_obj).total_seconds()
                 
                 filtered_input.append({
                     'id': item['id'], 
