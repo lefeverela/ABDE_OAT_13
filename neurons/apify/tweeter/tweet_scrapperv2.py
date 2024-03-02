@@ -115,7 +115,7 @@ class TwitterScraperV2:
             filtered_input.append(self.map_item(item))
 
         # Sort the message by their age
-        sorted_message = sorted(input, key=lambda message: message['age_in_seconds'])
+        sorted_message = sorted(filtered_input, key=lambda message: message['age_in_seconds'])
         sorted_message_relevant = []
 
         # Compute an estimage max average age
