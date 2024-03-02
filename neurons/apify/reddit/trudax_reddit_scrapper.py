@@ -194,7 +194,7 @@ class TrudaxRedditScraper:
             nb_message_to_send = i + 1
 
             # Check if the message is relevant
-            if (first_search.lower() in str(message_to_check['text']).lower()):
+            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check[ab]['title']).lower()):
                 relevant_count += 1
                 age_sum_relevant +=  message_to_check['age_in_seconds']
 
@@ -223,7 +223,7 @@ class TrudaxRedditScraper:
                 sorted_message[0]['contribution_all'] = sorted_message[0]['score_messages_all']
 
             # Compute final score if we are in a relevant message
-            if (first_search.lower() in str(message_to_check['text']).lower()):
+            if (first_search.lower() in str(message_to_check['text']).lower()) or (first_search.lower() in str(message_to_check[ab]['title']).lower()):
                 relevant_message = message_to_check.copy()
                 relevant_message['score_messages_relevant'] = relevancy_contribution_relevant + length_contribution_relevant + age_contribution_relevant
                 if (len(sorted_message_relevant) > 0):
@@ -260,7 +260,7 @@ class TrudaxRedditScraper:
             if (sorted_message[ab]['contribution_all'] > 0):
                 contribution_all.append(sorted_message[ab])
                 age_sum_contribution_all += sorted_message[ab]['age_in_seconds']
-                if (first_search.lower() in str(sorted_message[ab]['text']).lower()):
+                if (first_search.lower() in str(sorted_message[ab]['text']).lower()) or (first_search.lower() in str(sorted_message[ab]['title']).lower()):
                     contribution_relevant_count += 1
                     
         # Then compute the score of those 2 new groups
@@ -301,7 +301,7 @@ class TrudaxRedditScraper:
         #if ((len(list_of_ids) < min_post) and (len(starting_list) > 0) and (len(starting_list) < max_post)):
         #    for result in results: 
         #        for message in results[result]:
-        #            if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and (first_search.lower() in str(message['text']).lower())):
+        #            if ((message['id'] not in list_of_ids) and (len(starting_list) < max_post) and ( (first_search.lower() in str(message['text']).lower()) or (first_search.lower() in str(message[ab]['title']).lower()) ):
         #                starting_list.append(message)
         #                list_of_ids.append(message['id'])
 
