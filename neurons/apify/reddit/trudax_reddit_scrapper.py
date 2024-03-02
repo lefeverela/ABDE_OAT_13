@@ -3,7 +3,7 @@ import time
 import logging
 import traceback
 from neurons.apify.actors import run_actor, ActorConfig
-import neurons.score.reddit_score 
+#import neurons.score.reddit_score 
 import multiprocessing
 import xml.etree.ElementTree
 
@@ -239,6 +239,7 @@ class TrudaxRedditScraper:
             if (sorted_message_relevant[ab]['score_messages_relevant'] >= max_relevant):
                 max_relevant = sorted_message_relevant[ab]['score_messages_relevant']
                 index_relevant = ab
+                
         for ab in range (5, len(sorted_message)):
             if (sorted_message[ab]['score_messages_all'] >= max_all):
                 max_all = sorted_message[ab]['score_messages_all']
