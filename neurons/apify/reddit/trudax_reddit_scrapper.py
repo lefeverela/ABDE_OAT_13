@@ -177,10 +177,11 @@ class TrudaxRedditScraper:
 
         # Compute an estimage max average age
         max_average_age = 0
-        for i in range(0, min(len(sorted_message), 20)):
+        average_message_other_users = 50
+        for i in range(0, min(len(sorted_message), average_message_other_users)):
             max_average_age += sorted_message[i]['age_in_seconds']
         if (max_average_age != 0):
-            max_average_age = max_average_age / min(len(sorted_message), 20)
+            max_average_age = max_average_age / min(len(sorted_message), average_message_other_users)
         
         # Compute the score of the list has we add messages
         max_length = 100
