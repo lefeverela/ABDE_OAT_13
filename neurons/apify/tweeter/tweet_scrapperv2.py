@@ -21,7 +21,7 @@ class TwitterScraperV2:
 
         self.actor_config = ActorConfig("61RPP7dywgiy0JPD0")
         self.actor_config.memory_mbytes = 512
-        self.actor_config.timeout_secs = 45
+        self.actor_config.timeout_secs = 60
 
         self.keywords_past = []
 
