@@ -66,7 +66,7 @@ class TwitterScraperV2:
         run_input = {
           "maxRequestRetries": 3,
           "searchMode": "live",
-          "maxItems": 100,
+          "maxItems": 200,
           "minimumFavorites": 0,
           "minimumReplies": 0,
           "minimumRetweets": 0,
@@ -152,7 +152,7 @@ class TwitterScraperV2:
             max_average_age = max_average_age / min(len(sorted_message), average_message_other_users)
         
         # Compute the score of the list has we add messages
-        max_length = 100
+        max_length = 200
         relevant_count = 0
         age_sum_relevant, age_sum_all = 0, 0
         age_contribution_relevant = 0
