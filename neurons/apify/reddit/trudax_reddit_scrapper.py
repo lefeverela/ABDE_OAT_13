@@ -41,7 +41,7 @@ class TrudaxRedditScraper:
         Initialize the RedditScraperLite.
         """
         self.actor_config = ActorConfig("4YJmyaThjcRuUvQZg")
-        self.timeout_secs = 45
+        self.timeout_secs = 60
         self.memory_mbytes = 32768 
         
     def strip_tags(self, html):
