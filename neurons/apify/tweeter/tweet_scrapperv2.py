@@ -21,7 +21,7 @@ class TwitterScraperV2:
 
         self.actor_config = ActorConfig("61RPP7dywgiy0JPD0")
         self.actor_config.memory_mbytes = 512
-        self.actor_config.timeout_secs = 60
+        self.actor_config.timeout_secs = 90
 
         self.keywords_past = []
 
@@ -103,16 +103,17 @@ class TwitterScraperV2:
 
         for media in item.get("entities", {}).get('media', []):
             media_key = media.get("media_key")
-            if media.get("media_key"):
+            if media_key:
                 images.append(media_urls[media_key])
 
 
         date_format = "%a %b %d %H:%M:%S %z %Y"
         parsed_date = datetime.strptime(item["createdAt"], date_format)
+        
         age_in_seconds = (datetime.now(timezone.utc) - parsed_date).total_seconds()
         return {
             'id': item['id'], 
-            'url': item['url'], 
+            'url': item['twitterUrl'], 
             'text': item.get('text') or item['text'], 
             'likes': item['likeCount'], 
             'title': "",
