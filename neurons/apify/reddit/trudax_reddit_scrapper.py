@@ -235,12 +235,12 @@ class TrudaxRedditScraper:
         # Compute the max score we can get using index methodology
         max_relevant, index_relevant = 0, 0
         max_all, index_all = 0, 0
-        for ab in range (5, len(sorted_message_relevant)):
+        for ab in range (10, len(sorted_message_relevant)):
             if (sorted_message_relevant[ab]['score_messages_relevant'] >= max_relevant):
                 max_relevant = sorted_message_relevant[ab]['score_messages_relevant']
                 index_relevant = ab
                 
-        for ab in range (5, len(sorted_message)):
+        for ab in range (10, len(sorted_message)):
             if (sorted_message[ab]['score_messages_all'] >= max_all):
                 max_all = sorted_message[ab]['score_messages_all']
                 index_all = ab
