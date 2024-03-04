@@ -69,7 +69,7 @@ def get_config():
             'miner',
         )
     )
-    config.axon.max_workers = 30
+    config.axon.max_workers = 100
     
     # Ensure the directory for logging exists, else create one.
     if not os.path.exists(config.full_path): os.makedirs(config.full_path, exist_ok=True)
