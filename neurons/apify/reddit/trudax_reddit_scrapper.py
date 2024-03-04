@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+dsfrom datetime import datetime, timedelta, timezone
 import time
 import logging
 import traceback
@@ -94,6 +94,7 @@ class TrudaxRedditScraper:
 
         # HOUR REQUEST
         def first_request(run_input_local, results_queue):
+            run_input_local["limit"] = 50
             new_results = self.map(run_actor(self.actor_config, run_input_local))
             results_queue.put(["FIRST", new_results])
             return ()
@@ -123,10 +124,11 @@ class TrudaxRedditScraper:
 
         # Launch 3 request in parallel
         results_queue = multiprocessing.Manager().Queue() 
+        fourth_process = multiprocessing.Process(target=fourth_request, args=[run_input.copy(), results_queue])
         first_process = multiprocessing.Process(target=first_request, args=[run_input.copy(), results_queue])
         second_process = multiprocessing.Process(target=second_request, args=[run_input.copy(), results_queue])
         third_process = multiprocessing.Process(target=third_request, args=[run_input.copy(), results_queue])
-        fourth_process = multiprocessing.Process(target=fourth_request, args=[run_input.copy(), results_queue])
+        
         first_process.start()
         second_process.start()
         third_process.start()
@@ -135,7 +137,7 @@ class TrudaxRedditScraper:
         # Get results of the requests
         results = {}
         start_time = datetime.now()
-        while (len(results) != 4) and ((datetime.now() - start_time ) < timedelta(minutes=1)):
+        while (len(results) != 4) and ((datetime.now() - start_time ) < timedelta(seconds=65)):
             if (results_queue.qsize() > 0):
                 while (results_queue.qsize() > 0):
                     message = results_queue.get()
