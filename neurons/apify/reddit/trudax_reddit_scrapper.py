@@ -184,7 +184,7 @@ class TrudaxRedditScraper:
             max_average_age = max_average_age / min(len(sorted_message), average_message_other_users)
         
         # Compute the score of the list has we add messages
-        max_length = 100
+        max_length = 200
         relevant_count = 0
         age_sum_relevant, age_sum_all = 0, 0
         age_contribution_relevant = 0
